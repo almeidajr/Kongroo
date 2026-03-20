@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Kongroo Development",
+      "Group": "Development",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "kongroo",
+      "Username": "kongroo",
+      "SSLMode": "prefer"
+    }
+  }
+}
