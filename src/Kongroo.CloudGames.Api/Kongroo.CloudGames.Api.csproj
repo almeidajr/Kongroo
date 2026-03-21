@@ -18,4 +18,8 @@
     <PackageReference Include="Serilog.Enrichers.Process" />
     <PackageReference Include="Serilog.Enrichers.Thread" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kongroo.CloudGames.Identity\Kongroo.CloudGames.Identity.csproj" />
+  </ItemGroup>
 </Project>

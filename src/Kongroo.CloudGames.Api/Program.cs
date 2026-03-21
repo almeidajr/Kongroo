@@ -1,6 +1,8 @@
 using System.Globalization;
 using HealthChecks.UI.Client;
 using Kongroo.CloudGames.Api;
+using Kongroo.CloudGames.Identity;
+using Kongroo.CloudGames.Identity.Presentation;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Scalar.AspNetCore;
 using Serilog;
@@ -31,6 +33,8 @@ builder.Services.AddSerilog(configuration =>
         .Enrich.WithProperty("Application", AppDomain.CurrentDomain.FriendlyName)
 );
 
+builder.Services.AddIdentityModule();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -44,5 +48,6 @@ app.UseStatusCodePages();
 app.UseHttpsRedirection();
 
 app.MapHealthChecks("health", new HealthCheckOptions { ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse });
+app.MapIdentityEndpoints();
 
 await app.RunAsync();
