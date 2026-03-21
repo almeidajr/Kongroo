@@ -1,0 +1,5 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Kongroo.SharedKernel\Kongroo.SharedKernel.csproj" />
+  </ItemGroup>
+</Project>

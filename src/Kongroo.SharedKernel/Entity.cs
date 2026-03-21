@@ -1,15 +1,15 @@
 ﻿namespace Kongroo.SharedKernel;
 
-public abstract class Entity<TId>(TId id)
-    where TId : IEquatable<TId>
+public abstract class Entity<TEntityId>
+    where TEntityId : IEquatable<TEntityId>
 {
-    private readonly List<IDomainEvent> _domainEvents = [];
+    private readonly List<DomainEvent> _domainEvents = [];
 
-    public TId Id { get; protected init; } = id;
+    public required TEntityId Id { get; init; }
 
-    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+    public IReadOnlyCollection<DomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
-    protected void RaiseDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
+    protected void RaiseDomainEvent(DomainEvent domainEvent) => _domainEvents.Add(domainEvent);
 
     public void ClearDomainEvents() => _domainEvents.Clear();
 }
