@@ -8,6 +8,14 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+builder.Services.AddValidation();
+builder.Services.AddProblemDetails();
+builder
+    .Services.AddHealthChecks()
+    .AddApplicationLifecycleHealthCheck()
+    .AddResourceUtilizationHealthCheck()
+    .AddNpgSql(builder.Configuration.GetRequiredConnectionString("Database"));
+
 builder.Services.AddSerilog(configuration =>
     configuration
         .ReadFrom.Configuration(builder.Configuration)
@@ -22,11 +30,6 @@ builder.Services.AddSerilog(configuration =>
         .Enrich.WithThreadName()
         .Enrich.WithProperty("Application", AppDomain.CurrentDomain.FriendlyName)
 );
-builder
-    .Services.AddHealthChecks()
-    .AddApplicationLifecycleHealthCheck()
-    .AddResourceUtilizationHealthCheck()
-    .AddNpgSql(builder.Configuration.GetRequiredConnectionString("Database"));
 
 var app = builder.Build();
 
@@ -36,6 +39,8 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
+app.UseExceptionHandler();
+app.UseStatusCodePages();
 app.UseHttpsRedirection();
 
 app.MapHealthChecks("health", new HealthCheckOptions { ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse });
