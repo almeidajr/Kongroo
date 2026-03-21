@@ -1,4 +1,6 @@
-﻿namespace Kongroo.SharedKernel;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Kongroo.SharedKernel;
 
 public abstract class Entity<TEntityId>
     where TEntityId : IEquatable<TEntityId>
@@ -7,6 +9,7 @@ public abstract class Entity<TEntityId>
 
     public required TEntityId Id { get; init; }
 
+    [NotMapped]
     public IReadOnlyCollection<DomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
     protected void RaiseDomainEvent(DomainEvent domainEvent) => _domainEvents.Add(domainEvent);

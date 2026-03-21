@@ -2,6 +2,7 @@ using System.Globalization;
 using HealthChecks.UI.Client;
 using Kongroo.CloudGames.Api;
 using Kongroo.CloudGames.Identity;
+using Kongroo.CloudGames.Identity.Infrastructure;
 using Kongroo.CloudGames.Identity.Presentation;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Scalar.AspNetCore;
@@ -16,7 +17,8 @@ builder
     .Services.AddHealthChecks()
     .AddApplicationLifecycleHealthCheck()
     .AddResourceUtilizationHealthCheck()
-    .AddNpgSql(builder.Configuration.GetRequiredConnectionString("Database"));
+    .AddNpgSql(builder.Configuration.GetRequiredConnectionString("Database"))
+    .AddDbContextCheck<IdentityDbContext>();
 
 builder.Services.AddSerilog(configuration =>
     configuration
@@ -33,7 +35,7 @@ builder.Services.AddSerilog(configuration =>
         .Enrich.WithProperty("Application", AppDomain.CurrentDomain.FriendlyName)
 );
 
-builder.Services.AddIdentityModule();
+builder.Services.AddIdentityModule(builder.Configuration);
 
 var app = builder.Build();
 

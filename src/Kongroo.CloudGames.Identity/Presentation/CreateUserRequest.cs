@@ -1,17 +1,18 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Kongroo.CloudGames.Identity.Domain;
 
 namespace Kongroo.CloudGames.Identity.Presentation;
 
 public record CreateUserRequest(
     [property: Required]
-    [property: MinLength(4)]
-    [property: MaxLength(32)]
+    [property: MinLength(User.UsernameMinLength)]
+    [property: MaxLength(User.UsernameMaxLength)]
     [property: Description("Unique sign-in name for the new user.")]
         string Username,
     [property: Required]
     [property: EmailAddress]
-    [property: MaxLength(256)]
+    [property: MaxLength(User.EmailMaxLength)]
     [property: Description("Email address used for account communication and sign-in.")]
         string Email,
     [property: Required]
@@ -21,8 +22,8 @@ public record CreateUserRequest(
     [property: Description("Plain-text password supplied during account registration.")]
         string Password,
     [property: Required]
-    [property: MinLength(2)]
-    [property: MaxLength(256)]
+    [property: MinLength(User.NameMinLength)]
+    [property: MaxLength(User.NameMaxLength)]
     [property: Description("Display name shown for the user profile.")]
         string Name
 );

@@ -4,6 +4,14 @@ namespace Kongroo.CloudGames.Identity.Domain;
 
 public class User : Entity<UserId>
 {
+    public const int UsernameMinLength = 4;
+    public const int UsernameMaxLength = 32;
+    public const int EmailMaxLength = 256;
+    public const int PasswordHashMaxLength = 256;
+    public const int SecurityStampMaxLength = 256;
+    public const int NameMinLength = 2;
+    public const int NameMaxLength = 256;
+
     private User() { }
 
     public required string Username { get; init; }
