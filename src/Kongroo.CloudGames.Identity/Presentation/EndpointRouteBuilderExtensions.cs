@@ -38,7 +38,7 @@ public static class EndpointRouteBuilderExtensions
         }
     }
 
-    private static async Task<Created<CreateUserResponse>> CreateUserAsync(
+    private static async Task<CreatedAtRoute<CreateUserResponse>> CreateUserAsync(
         CreateUserRequest request,
         CreateUserCommandHandler handler,
         CancellationToken cancellationToken
@@ -47,7 +47,7 @@ public static class EndpointRouteBuilderExtensions
         var command = new CreateUserCommand(request.Username, request.Email, request.Password, request.Name);
         var response = await handler.HandleAsync(command, cancellationToken);
 
-        return TypedResults.Created($"/users/{response.Id}", response);
+        return TypedResults.CreatedAtRoute(response, "GetUserById", new { userId = response.Id });
     }
 
     private static async Task<Ok<GetUserResponse>> GetUserAsync(
