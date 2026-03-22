@@ -18,6 +18,7 @@ public static class EndpointRouteBuilderExtensions
             routeGroup
                 .MapPost("/users", CreateUserAsync)
                 .ProducesValidationProblem()
+                .ProducesProblem(StatusCodes.Status409Conflict)
                 .ProducesProblem(StatusCodes.Status500InternalServerError)
                 .WithName("CreateUser")
                 .WithSummary("Register a user account")
@@ -27,8 +28,7 @@ public static class EndpointRouteBuilderExtensions
 
             routeGroup
                 .MapGet("/users/{userId:guid}", GetUserAsync)
-                .Produces<GetUserResponse>()
-                .Produces(StatusCodes.Status404NotFound)
+                .ProducesProblem(StatusCodes.Status404NotFound)
                 .ProducesProblem(StatusCodes.Status500InternalServerError)
                 .WithName("GetUserById")
                 .WithSummary("Get a user account")
@@ -50,7 +50,7 @@ public static class EndpointRouteBuilderExtensions
         return TypedResults.Created($"/users/{response.Id}", response);
     }
 
-    private static async Task<Results<Ok<GetUserResponse>, NotFound>> GetUserAsync(
+    private static async Task<Ok<GetUserResponse>> GetUserAsync(
         [Description("Unique identifier of the user to retrieve.")] Guid userId,
         GetUserQueryHandler handler,
         CancellationToken cancellationToken
@@ -59,6 +59,6 @@ public static class EndpointRouteBuilderExtensions
         var query = new GetUserQuery(userId);
         var response = await handler.HandleAsync(query, cancellationToken);
 
-        return response is not null ? TypedResults.Ok(response) : TypedResults.NotFound();
+        return TypedResults.Ok(response);
     }
 }
