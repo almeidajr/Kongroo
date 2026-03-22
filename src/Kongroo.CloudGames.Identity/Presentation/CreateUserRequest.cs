@@ -18,6 +18,10 @@ public record CreateUserRequest(
     [property: Required]
     [property: MinLength(8)]
     [property: MaxLength(128)]
+    [property: RegularExpression(
+        @"^(?=.*[A-Za-z])(?=.*\d)(?=.*[^\w\s]).+$",
+        ErrorMessage = "Password must include letters, numbers, and special characters."
+    )]
     [property: DataType(DataType.Password)]
     [property: Description("Plain-text password supplied during account registration.")]
         string Password,
