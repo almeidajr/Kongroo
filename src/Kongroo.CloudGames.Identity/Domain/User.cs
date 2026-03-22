@@ -8,7 +8,7 @@ public class User : Entity<UserId>
     public const int UsernameMaxLength = 32;
     public const int EmailMaxLength = 256;
     public const int PasswordHashMaxLength = 256;
-    public const int SecurityStampMaxLength = 256;
+    public const int SecurityStampLength = 32;
     public const int NameMinLength = 2;
     public const int NameMaxLength = 256;
 

@@ -1,4 +1,4 @@
-using Kongroo.CloudGames.Identity.Domain;
+using Kongroo.CloudGames.Identity.Application;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -28,9 +28,13 @@ public static class EndpointRouteBuilderExtensions
         }
     }
 
-    private static Created<CreateUserResponse> CreateUser(CreateUserRequest request)
+    private static async Task<Created<CreateUserResponse>> CreateUser(
+        CreateUserRequest request,
+        CreateUserCommandHandler handler,
+        CancellationToken cancellationToken
+    )
     {
-        var response = new CreateUserResponse(UserId.Create().Value, request.Username, request.Email, request.Name);
+        var response = await handler.Handle(request, cancellationToken);
 
         return TypedResults.Created($"/users/{response.Id}", response);
     }

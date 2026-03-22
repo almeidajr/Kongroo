@@ -17,7 +17,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(user => user.Username).HasMaxLength(User.UsernameMaxLength);
         builder.Property(user => user.Email).HasMaxLength(User.EmailMaxLength);
         builder.Property(user => user.PasswordHash).HasMaxLength(User.PasswordHashMaxLength);
-        builder.Property(user => user.SecurityStamp).HasMaxLength(User.SecurityStampMaxLength);
+        builder.Property(user => user.SecurityStamp).HasMaxLength(User.SecurityStampLength).IsFixedLength();
         builder.Property(user => user.Name).HasMaxLength(User.NameMaxLength);
     }
 }

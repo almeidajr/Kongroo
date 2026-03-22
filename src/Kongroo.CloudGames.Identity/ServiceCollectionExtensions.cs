@@ -1,4 +1,6 @@
-﻿using Kongroo.CloudGames.Identity.Infrastructure;
+﻿using Kongroo.CloudGames.Identity.Application;
+using Kongroo.CloudGames.Identity.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +14,15 @@ public static class ServiceCollectionExtensions
         public IServiceCollection AddIdentityModule(IConfiguration configuration)
         {
             services.AddValidation();
+            services.AddApplication();
             services.AddInfrastructure(configuration);
+            return services;
+        }
+
+        private IServiceCollection AddApplication()
+        {
+            services.AddScoped<CreateUserCommandHandler>();
+            services.AddSingleton<IPasswordHasher<string>, PasswordHasher<string>>();
             return services;
         }
 
