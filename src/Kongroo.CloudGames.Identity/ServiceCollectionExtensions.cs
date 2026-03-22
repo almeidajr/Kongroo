@@ -22,6 +22,8 @@ public static class ServiceCollectionExtensions
         private IServiceCollection AddApplication()
         {
             services.AddScoped<CreateUserCommandHandler>();
+            services.AddScoped<GetUserQueryHandler>();
+
             services.AddSingleton<IPasswordHasher<string>, PasswordHasher<string>>();
             return services;
         }

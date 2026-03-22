@@ -1,21 +1,20 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 using Kongroo.CloudGames.Identity.Domain;
 using Kongroo.CloudGames.Identity.Infrastructure;
-using Kongroo.CloudGames.Identity.Presentation;
 using Microsoft.AspNetCore.Identity;
 
 namespace Kongroo.CloudGames.Identity.Application;
 
 public class CreateUserCommandHandler(IPasswordHasher<string> passwordHasher, IdentityDbContext context)
 {
-    public async Task<CreateUserResponse> Handle(CreateUserRequest request, CancellationToken cancellationToken)
+    public async Task<CreateUserResponse> HandleAsync(CreateUserCommand command, CancellationToken cancellationToken)
     {
         var user = User.Create(
-            request.Username,
-            request.Email,
-            passwordHasher.HashPassword(request.Username, request.Password),
+            command.Username,
+            command.Email,
+            passwordHasher.HashPassword(command.Username, command.Password),
             RandomNumberGenerator.GetHexString(User.SecurityStampLength),
-            request.Name
+            command.Name
         );
 
         context.Users.Add(user);

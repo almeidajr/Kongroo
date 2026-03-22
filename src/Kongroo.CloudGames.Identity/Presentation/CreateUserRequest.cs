@@ -4,7 +4,7 @@ using Kongroo.CloudGames.Identity.Domain;
 
 namespace Kongroo.CloudGames.Identity.Presentation;
 
-public record CreateUserRequest(
+public sealed record CreateUserRequest(
     [property: Required]
     [property: MinLength(User.UsernameMinLength)]
     [property: MaxLength(User.UsernameMaxLength)]
