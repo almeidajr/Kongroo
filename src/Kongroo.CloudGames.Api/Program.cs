@@ -1,9 +1,11 @@
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using HealthChecks.UI.Client;
 using Kongroo.CloudGames.Api;
 using Kongroo.CloudGames.Api.OpenApi;
 using Kongroo.CloudGames.Identity;
+using Kongroo.CloudGames.Identity.Domain;
 using Kongroo.CloudGames.Identity.Infrastructure;
 using Kongroo.CloudGames.Identity.Presentation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -66,9 +68,12 @@ builder
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero,
             NameClaimType = JwtRegisteredClaimNames.UniqueName,
+            RoleClaimType = ClaimTypes.Role,
         };
     });
-builder.Services.AddAuthorization();
+builder
+    .Services.AddAuthorizationBuilder()
+    .AddPolicy(AuthorizationPolicies.Admin, policy => policy.RequireRole(nameof(UserRole.Admin)));
 
 builder.Services.AddIdentityModule(builder.Configuration);
 

@@ -1,6 +1,4 @@
 using System.ComponentModel;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Kongroo.CloudGames.Identity.Application;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -31,7 +29,7 @@ public static class EndpointRouteBuilderExtensions
 
             routeGroup
                 .MapGet("/users/{userId:guid}", GetUserAsync)
-                .RequireAuthorization()
+                .RequireAuthorization(AuthorizationPolicies.Admin)
                 .ProducesProblem(StatusCodes.Status401Unauthorized)
                 .ProducesProblem(StatusCodes.Status403Forbidden)
                 .ProducesProblem(StatusCodes.Status404NotFound)
@@ -66,18 +64,12 @@ public static class EndpointRouteBuilderExtensions
         return TypedResults.CreatedAtRoute(response, "GetUserById", new { userId = response.Id });
     }
 
-    private static async Task<Results<Ok<GetUserResponse>, ForbidHttpResult>> GetUserAsync(
+    private static async Task<Ok<GetUserResponse>> GetUserAsync(
         [Description("Unique identifier of the user to retrieve.")] Guid userId,
-        ClaimsPrincipal user,
         GetUserQueryHandler handler,
         CancellationToken cancellationToken
     )
     {
-        if (!CanReadUser(user, userId))
-        {
-            return TypedResults.Forbid();
-        }
-
         var query = new GetUserQuery(userId);
         var response = await handler.HandleAsync(query, cancellationToken);
 
@@ -94,11 +86,5 @@ public static class EndpointRouteBuilderExtensions
         var response = await handler.HandleAsync(command, cancellationToken);
 
         return response is null ? TypedResults.Unauthorized() : TypedResults.Ok(response);
-    }
-
-    private static bool CanReadUser(ClaimsPrincipal user, Guid requestedUserId)
-    {
-        var subject = user.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-        return Guid.TryParse(subject, out var authenticatedUserId) && authenticatedUserId == requestedUserId;
     }
 }
