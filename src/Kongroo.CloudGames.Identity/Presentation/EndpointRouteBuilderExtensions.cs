@@ -32,8 +32,8 @@ public static class EndpointRouteBuilderExtensions
             routeGroup
                 .MapGet("/users/{userId:guid}", GetUserAsync)
                 .RequireAuthorization()
-                .Produces(StatusCodes.Status401Unauthorized)
-                .Produces(StatusCodes.Status403Forbidden)
+                .ProducesProblem(StatusCodes.Status401Unauthorized)
+                .ProducesProblem(StatusCodes.Status403Forbidden)
                 .ProducesProblem(StatusCodes.Status404NotFound)
                 .ProducesProblem(StatusCodes.Status500InternalServerError)
                 .WithName("GetUserById")
@@ -44,7 +44,8 @@ public static class EndpointRouteBuilderExtensions
                 .MapPost("/tokens", CreateAccessTokenAsync)
                 .AllowAnonymous()
                 .ProducesValidationProblem()
-                .Produces(StatusCodes.Status401Unauthorized)
+                .ProducesProblem(StatusCodes.Status401Unauthorized)
+                .ProducesProblem(StatusCodes.Status500InternalServerError)
                 .WithName("CreateAccessToken")
                 .WithSummary("Create an access token")
                 .WithDescription("Validates user credentials and returns a short-lived bearer access token.");
@@ -65,18 +66,6 @@ public static class EndpointRouteBuilderExtensions
         return TypedResults.CreatedAtRoute(response, "GetUserById", new { userId = response.Id });
     }
 
-    private static async Task<Results<Ok<AuthenticateUserResponse>, UnauthorizedHttpResult>> CreateAccessTokenAsync(
-        CreateAccessTokenRequest request,
-        AuthenticateUserCommandHandler handler,
-        CancellationToken cancellationToken
-    )
-    {
-        var command = new AuthenticateUserCommand(request.Username, request.Password);
-        var response = await handler.HandleAsync(command, cancellationToken);
-
-        return response is null ? TypedResults.Unauthorized() : TypedResults.Ok(response);
-    }
-
     private static async Task<Results<Ok<GetUserResponse>, ForbidHttpResult>> GetUserAsync(
         [Description("Unique identifier of the user to retrieve.")] Guid userId,
         ClaimsPrincipal user,
@@ -93,6 +82,18 @@ public static class EndpointRouteBuilderExtensions
         var response = await handler.HandleAsync(query, cancellationToken);
 
         return TypedResults.Ok(response);
+    }
+
+    private static async Task<Results<Ok<AuthenticateUserResponse>, UnauthorizedHttpResult>> CreateAccessTokenAsync(
+        CreateAccessTokenRequest request,
+        AuthenticateUserCommandHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        var command = new AuthenticateUserCommand(request.Username, request.Password);
+        var response = await handler.HandleAsync(command, cancellationToken);
+
+        return response is null ? TypedResults.Unauthorized() : TypedResults.Ok(response);
     }
 
     private static bool CanReadUser(ClaimsPrincipal user, Guid requestedUserId)
