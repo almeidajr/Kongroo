@@ -73,7 +73,7 @@ builder
     });
 builder
     .Services.AddAuthorizationBuilder()
-    .AddPolicy(AuthorizationPolicies.Admin, policy => policy.RequireRole(nameof(UserRole.Admin)));
+    .AddPolicy(AuthorizationPolicies.AdminOnly, policy => policy.RequireRole(UserRole.Admin.Value));
 
 builder.Services.AddIdentityModule(builder.Configuration);
 

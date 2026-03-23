@@ -29,7 +29,7 @@ public static class EndpointRouteBuilderExtensions
 
             routeGroup
                 .MapGet("/users/{userId:guid}", GetUserAsync)
-                .RequireAuthorization(AuthorizationPolicies.Admin)
+                .RequireAuthorization(AuthorizationPolicies.AdminOnly)
                 .ProducesProblem(StatusCodes.Status401Unauthorized)
                 .ProducesProblem(StatusCodes.Status403Forbidden)
                 .ProducesProblem(StatusCodes.Status404NotFound)

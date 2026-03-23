@@ -24,7 +24,7 @@ public class User : Entity<UserId>
 
     public required string Name { get; init; }
 
-    public UserRole Role { get; private set; }
+    public required UserRole Role { get; set; }
 
     public static User Create(string username, string email, string passwordHash, string securityStamp, string name)
     {
