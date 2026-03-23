@@ -24,6 +24,8 @@ public class User : Entity<UserId>
 
     public required string Name { get; init; }
 
+    public UserRole Role { get; private set; }
+
     public static User Create(string username, string email, string passwordHash, string securityStamp, string name)
     {
         var user = new User
@@ -34,8 +36,25 @@ public class User : Entity<UserId>
             PasswordHash = passwordHash,
             SecurityStamp = securityStamp,
             Name = name,
+            Role = UserRole.User,
         };
         user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id));
         return user;
+    }
+
+    public void GrantAdmin() => ChangeRole(UserRole.Admin);
+
+    public void RevokeAdmin() => ChangeRole(UserRole.User);
+
+    private void ChangeRole(UserRole role)
+    {
+        if (Role == role)
+        {
+            return;
+        }
+
+        var previousRole = Role;
+        Role = role;
+        RaiseDomainEvent(new UserRoleChangedDomainEvent(Id, previousRole, Role));
     }
 }

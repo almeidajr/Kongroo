@@ -1,4 +1,4 @@
-﻿using Kongroo.CloudGames.Identity.Domain;
+using Kongroo.CloudGames.Identity.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,5 +19,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(user => user.PasswordHash).HasMaxLength(User.PasswordHashMaxLength);
         builder.Property(user => user.SecurityStamp).HasMaxLength(User.SecurityStampLength).IsFixedLength();
         builder.Property(user => user.Name).HasMaxLength(User.NameMaxLength);
+        builder.Property(user => user.Role).HasConversion<string>().HasMaxLength(16);
     }
 }
