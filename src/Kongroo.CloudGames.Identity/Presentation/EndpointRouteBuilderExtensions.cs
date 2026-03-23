@@ -1,4 +1,6 @@
 using System.ComponentModel;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using Kongroo.CloudGames.Identity.Application;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -17,6 +19,7 @@ public static class EndpointRouteBuilderExtensions
 
             routeGroup
                 .MapPost("/users", CreateUserAsync)
+                .AllowAnonymous()
                 .ProducesValidationProblem()
                 .ProducesProblem(StatusCodes.Status409Conflict)
                 .ProducesProblem(StatusCodes.Status500InternalServerError)
@@ -28,11 +31,23 @@ public static class EndpointRouteBuilderExtensions
 
             routeGroup
                 .MapGet("/users/{userId:guid}", GetUserAsync)
+                .RequireAuthorization()
+                .Produces(StatusCodes.Status401Unauthorized)
+                .Produces(StatusCodes.Status403Forbidden)
                 .ProducesProblem(StatusCodes.Status404NotFound)
                 .ProducesProblem(StatusCodes.Status500InternalServerError)
                 .WithName("GetUserById")
                 .WithSummary("Get a user account")
                 .WithDescription("Returns the public profile information for an existing user.");
+
+            routeGroup
+                .MapPost("/tokens", CreateAccessTokenAsync)
+                .AllowAnonymous()
+                .ProducesValidationProblem()
+                .Produces(StatusCodes.Status401Unauthorized)
+                .WithName("CreateAccessToken")
+                .WithSummary("Create an access token")
+                .WithDescription("Validates user credentials and returns a short-lived bearer access token.");
 
             return routeGroup;
         }
@@ -50,15 +65,39 @@ public static class EndpointRouteBuilderExtensions
         return TypedResults.CreatedAtRoute(response, "GetUserById", new { userId = response.Id });
     }
 
-    private static async Task<Ok<GetUserResponse>> GetUserAsync(
+    private static async Task<Results<Ok<AuthenticateUserResponse>, UnauthorizedHttpResult>> CreateAccessTokenAsync(
+        CreateAccessTokenRequest request,
+        AuthenticateUserCommandHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        var command = new AuthenticateUserCommand(request.Username, request.Password);
+        var response = await handler.HandleAsync(command, cancellationToken);
+
+        return response is null ? TypedResults.Unauthorized() : TypedResults.Ok(response);
+    }
+
+    private static async Task<Results<Ok<GetUserResponse>, ForbidHttpResult>> GetUserAsync(
         [Description("Unique identifier of the user to retrieve.")] Guid userId,
+        ClaimsPrincipal user,
         GetUserQueryHandler handler,
         CancellationToken cancellationToken
     )
     {
+        if (!CanReadUser(user, userId))
+        {
+            return TypedResults.Forbid();
+        }
+
         var query = new GetUserQuery(userId);
         var response = await handler.HandleAsync(query, cancellationToken);
 
         return TypedResults.Ok(response);
+    }
+
+    private static bool CanReadUser(ClaimsPrincipal user, Guid requestedUserId)
+    {
+        var subject = user.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        return Guid.TryParse(subject, out var authenticatedUserId) && authenticatedUserId == requestedUserId;
     }
 }

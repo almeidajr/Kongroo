@@ -1,0 +1,38 @@
+using Kongroo.CloudGames.Identity.Application.Abstractions;
+using Kongroo.CloudGames.Identity.Domain;
+using Kongroo.CloudGames.Identity.Infrastructure;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
+namespace Kongroo.CloudGames.Identity.Application;
+
+public sealed class AuthenticateUserCommandHandler(
+    IdentityDbContext context,
+    IPasswordHasher<string> passwordHasher,
+    IAccessTokenIssuer accessTokenIssuer
+)
+{
+    public async Task<AuthenticateUserResponse?> HandleAsync(
+        AuthenticateUserCommand command,
+        CancellationToken cancellationToken
+    )
+    {
+        var user = await context
+            .Users.AsNoTracking()
+            .SingleOrDefaultAsync(candidate => candidate.Username == command.Username, cancellationToken);
+
+        if (user is null || !HasValidPassword(user, command.Password))
+        {
+            return null;
+        }
+
+        return accessTokenIssuer.IssueToken(user);
+    }
+
+    private bool HasValidPassword(User user, string password)
+    {
+        var verificationResult = passwordHasher.VerifyHashedPassword(user.Username, user.PasswordHash, password);
+
+        return verificationResult == PasswordVerificationResult.Success;
+    }
+}
