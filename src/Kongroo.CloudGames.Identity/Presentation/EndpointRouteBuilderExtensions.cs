@@ -1,4 +1,6 @@
 using System.ComponentModel;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using Kongroo.CloudGames.Identity.Application;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +28,16 @@ public static class EndpointRouteBuilderExtensions
                 .WithDescription(
                     "Creates a user account and returns the public profile information for the new identity."
                 );
+
+            routeGroup
+                .MapGet("/users/me", GetCurrentUserAsync)
+                .RequireAuthorization()
+                .ProducesProblem(StatusCodes.Status401Unauthorized)
+                .ProducesProblem(StatusCodes.Status404NotFound)
+                .ProducesProblem(StatusCodes.Status500InternalServerError)
+                .WithName("GetCurrentUser")
+                .WithSummary("Get the authenticated user account")
+                .WithDescription("Returns the public profile information for the authenticated user.");
 
             routeGroup
                 .MapGet("/users/{userId:guid}", GetUserAsync)
@@ -62,6 +74,25 @@ public static class EndpointRouteBuilderExtensions
         var response = await handler.HandleAsync(command, cancellationToken);
 
         return TypedResults.CreatedAtRoute(response, "GetUserById", new { userId = response.Id });
+    }
+
+    private static async Task<Results<Ok<GetUserResponse>, UnauthorizedHttpResult>> GetCurrentUserAsync(
+        ClaimsPrincipal user,
+        GetUserQueryHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        var subject = user.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
+        if (!Guid.TryParse(subject, out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        var query = new GetUserQuery(userId);
+        var response = await handler.HandleAsync(query, cancellationToken);
+
+        return TypedResults.Ok(response);
     }
 
     private static async Task<Ok<GetUserResponse>> GetUserAsync(
