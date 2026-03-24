@@ -19,6 +19,7 @@ public class DomainExceptionHandler(IProblemDetailsService problemDetailsService
 
         httpContext.Response.StatusCode = domainException switch
         {
+            UnauthorizedException => StatusCodes.Status401Unauthorized,
             NotFoundException => StatusCodes.Status404NotFound,
             ConflictException => StatusCodes.Status409Conflict,
             _ => StatusCodes.Status400BadRequest,

@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Kongroo.CloudGames.Identity.Application;
 using Microsoft.AspNetCore.Builder;
@@ -76,19 +75,13 @@ public static class EndpointRouteBuilderExtensions
         return TypedResults.CreatedAtRoute(response, "GetUserById", new { userId = response.Id });
     }
 
-    private static async Task<Results<Ok<GetUserResponse>, UnauthorizedHttpResult>> GetCurrentUserAsync(
+    private static async Task<Ok<GetUserResponse>> GetCurrentUserAsync(
         ClaimsPrincipal user,
         GetUserQueryHandler handler,
         CancellationToken cancellationToken
     )
     {
-        var subject = user.FindFirstValue(JwtRegisteredClaimNames.Sub);
-
-        if (!Guid.TryParse(subject, out var userId))
-        {
-            return TypedResults.Unauthorized();
-        }
-
+        var userId = user.GetUserId();
         var query = new GetUserQuery(userId);
         var response = await handler.HandleAsync(query, cancellationToken);
 
