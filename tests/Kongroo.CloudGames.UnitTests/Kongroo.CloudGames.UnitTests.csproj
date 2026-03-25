@@ -22,4 +22,8 @@
     <PackageReference Include="Shouldly" />
     <PackageReference Include="xunit.v3.mtp-v2" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Kongroo.CloudGames.Identity\Kongroo.CloudGames.Identity.csproj" />
+  </ItemGroup>
 </Project>
