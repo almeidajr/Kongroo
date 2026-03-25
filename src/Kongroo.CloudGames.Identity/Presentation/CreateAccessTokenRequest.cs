@@ -6,8 +6,8 @@ namespace Kongroo.CloudGames.Identity.Presentation;
 
 public sealed record CreateAccessTokenRequest(
     [property: Required]
-    [property: MinLength(User.UsernameMinLength)]
-    [property: MaxLength(User.UsernameMaxLength)]
+    [property: MinLength(Username.MinLength)]
+    [property: MaxLength(Username.MaxLength)]
     [property: Description("Unique sign-in name used to authenticate the user.")]
         string Username,
     [property: Required]

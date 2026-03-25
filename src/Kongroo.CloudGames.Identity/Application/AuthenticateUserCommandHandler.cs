@@ -19,7 +19,7 @@ public sealed class AuthenticateUserCommandHandler(
     {
         var user = await context
             .Users.AsNoTracking()
-            .SingleOrDefaultAsync(candidate => candidate.Username == command.Username, cancellationToken);
+            .SingleOrDefaultAsync(user => user.Username == Username.From(command.Username), cancellationToken);
 
         if (user is null || !HasValidPassword(user, command.Password))
         {
@@ -31,7 +31,11 @@ public sealed class AuthenticateUserCommandHandler(
 
     private bool HasValidPassword(User user, string password)
     {
-        var verificationResult = passwordHasher.VerifyHashedPassword(user.Username, user.PasswordHash, password);
+        var verificationResult = passwordHasher.VerifyHashedPassword(
+            user.Username.Value,
+            user.PasswordHash.Value,
+            password
+        );
 
         return verificationResult == PasswordVerificationResult.Success;
     }

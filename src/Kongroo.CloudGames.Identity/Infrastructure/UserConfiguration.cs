@@ -9,19 +9,35 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.HasKey(user => user.Id);
-        builder.Property(user => user.Id).HasConversion(id => id.Value, value => new UserId(value));
+        builder.Property(user => user.Id).HasConversion(id => id.Value, value => UserId.From(value));
 
         builder.HasIndex(user => user.Username).IsUnique();
         builder.HasIndex(user => user.Email).IsUnique();
 
-        builder.Property(user => user.Username).HasMaxLength(User.UsernameMaxLength);
-        builder.Property(user => user.Email).HasMaxLength(User.EmailMaxLength);
-        builder.Property(user => user.PasswordHash).HasMaxLength(User.PasswordHashMaxLength);
-        builder.Property(user => user.SecurityStamp).HasMaxLength(User.SecurityStampLength).IsFixedLength();
-        builder.Property(user => user.Name).HasMaxLength(User.NameMaxLength);
+        builder
+            .Property(user => user.Username)
+            .HasConversion(username => username.Value, value => Username.From(value))
+            .HasMaxLength(Username.MaxLength);
+        builder
+            .Property(user => user.Email)
+            .HasConversion(email => email.Value, value => Email.From(value))
+            .HasMaxLength(Email.MaxLength);
+        builder
+            .Property(user => user.PasswordHash)
+            .HasConversion(passwordHash => passwordHash.Value, value => PasswordHash.From(value))
+            .HasMaxLength(PasswordHash.MaxLength);
+        builder
+            .Property(user => user.SecurityStamp)
+            .HasConversion(securityStamp => securityStamp.Value, value => SecurityStamp.From(value))
+            .HasMaxLength(SecurityStamp.Length)
+            .IsFixedLength();
+        builder
+            .Property(user => user.Name)
+            .HasConversion(name => name.Value, value => PersonName.From(value))
+            .HasMaxLength(PersonName.MaxLength);
         builder
             .Property(user => user.Role)
             .HasConversion(role => role.Value, value => UserRole.From(value))
-            .HasMaxLength(16);
+            .HasMaxLength(UserRole.MaxLength);
     }
 }

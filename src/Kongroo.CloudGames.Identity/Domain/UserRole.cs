@@ -2,6 +2,8 @@
 
 public record UserRole(string Value)
 {
+    public const int MaxLength = 16;
+
     public static readonly UserRole User = new("user");
     public static readonly UserRole Admin = new("admin");
 
