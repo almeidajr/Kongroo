@@ -4,6 +4,8 @@ using System.Security.Claims;
 using HealthChecks.UI.Client;
 using Kongroo.CloudGames.Api;
 using Kongroo.CloudGames.Api.OpenApi;
+using Kongroo.CloudGames.Catalog;
+using Kongroo.CloudGames.Catalog.Presentation;
 using Kongroo.CloudGames.Identity;
 using Kongroo.CloudGames.Identity.Domain;
 using Kongroo.CloudGames.Identity.Infrastructure;
@@ -75,6 +77,7 @@ builder
     .Services.AddAuthorizationBuilder()
     .AddPolicy(AuthorizationPolicies.AdminOnly, policy => policy.RequireRole(UserRole.Admin.Value));
 
+builder.Services.AddCatalogModule(builder.Configuration);
 builder.Services.AddIdentityModule(builder.Configuration);
 
 var app = builder.Build();
@@ -87,6 +90,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapHealthChecks("health", new HealthCheckOptions { ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse });
+app.MapCatalogEndpoints();
 app.MapIdentityEndpoints();
 
 if (app.Environment.IsDevelopment())
