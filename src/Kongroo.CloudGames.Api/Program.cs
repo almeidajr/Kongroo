@@ -61,7 +61,6 @@ builder
             builder.Configuration.GetRequiredSection(JwtOptions.SectionName).Get<JwtOptions>()
             ?? throw new InvalidOperationException($"Configuration section '{JwtOptions.SectionName}' is missing.");
 
-        options.MapInboundClaims = false;
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
