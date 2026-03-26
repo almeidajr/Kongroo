@@ -5,6 +5,7 @@ using HealthChecks.UI.Client;
 using Kongroo.CloudGames.Api;
 using Kongroo.CloudGames.Api.OpenApi;
 using Kongroo.CloudGames.Catalog;
+using Kongroo.CloudGames.Catalog.Infrastructure;
 using Kongroo.CloudGames.Catalog.Presentation;
 using Kongroo.CloudGames.Identity;
 using Kongroo.CloudGames.Identity.Domain;
@@ -48,6 +49,7 @@ builder
     .AddApplicationLifecycleHealthCheck()
     .AddResourceUtilizationHealthCheck()
     .AddNpgSql(builder.Configuration.GetRequiredConnectionString("Database"))
+    .AddDbContextCheck<CatalogDbContext>()
     .AddDbContextCheck<IdentityDbContext>();
 
 builder

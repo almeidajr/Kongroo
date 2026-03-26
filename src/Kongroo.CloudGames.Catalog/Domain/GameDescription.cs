@@ -3,7 +3,7 @@ namespace Kongroo.CloudGames.Catalog.Domain;
 public sealed record GameDescription(string Value)
 {
     public const int MinLength = 2;
-    public const int MaxLength = 4000;
+    public const int MaxLength = 2048;
 
     public static GameDescription From(string value)
     {
