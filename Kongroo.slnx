@@ -10,6 +10,7 @@
 
   <Folder Name="/src/">
     <Project Path="src/Kongroo.CloudGames.Api/Kongroo.CloudGames.Api.csproj" />
+    <Project Path="src/Kongroo.CloudGames.Catalog/Kongroo.CloudGames.Catalog.csproj" />
     <Project Path="src/Kongroo.CloudGames.Identity/Kongroo.CloudGames.Identity.csproj" />
     <Project Path="src/Kongroo.SharedKernel/Kongroo.SharedKernel.csproj" />
   </Folder>
