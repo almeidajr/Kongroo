@@ -11,6 +11,7 @@ using Kongroo.CloudGames.Identity;
 using Kongroo.CloudGames.Identity.Domain;
 using Kongroo.CloudGames.Identity.Infrastructure;
 using Kongroo.CloudGames.Identity.Presentation;
+using Kongroo.SharedKernel.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;

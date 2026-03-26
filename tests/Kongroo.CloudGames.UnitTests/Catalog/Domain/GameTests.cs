@@ -37,6 +37,59 @@ public class GameTests
     }
 
     [Fact]
+    public void ChangeDetails_WithValidValues_ShouldUpdateTitleAndDescription()
+    {
+        // Arrange
+        var game = CreateGame();
+        var updatedTitle = GameTitle.From("Portal 2");
+        var updatedDescription = GameDescription.From("A cooperative puzzle platformer.");
+
+        // Act
+        game.ChangeDetails(updatedTitle, updatedDescription);
+
+        // Assert
+        game.Title.ShouldBe(updatedTitle);
+        game.Description.ShouldBe(updatedDescription);
+    }
+
+    [Fact]
+    public void ChangeDetails_WithValidValues_ShouldRaiseDetailsChangedEvent()
+    {
+        // Arrange
+        var game = CreateGame();
+        var previousTitle = game.Title;
+        var previousDescription = game.Description;
+        var updatedTitle = GameTitle.From("Portal 2");
+        var updatedDescription = GameDescription.From("A cooperative puzzle platformer.");
+        game.ClearDomainEvents();
+
+        // Act
+        game.ChangeDetails(updatedTitle, updatedDescription);
+
+        // Assert
+        var domainEvent = game.DomainEvents.Single().ShouldBeOfType<GameDetailsChangedDomainEvent>();
+        domainEvent.GameId.ShouldBe(game.Id);
+        domainEvent.PreviousTitle.ShouldBe(previousTitle);
+        domainEvent.CurrentTitle.ShouldBe(updatedTitle);
+        domainEvent.PreviousDescription.ShouldBe(previousDescription);
+        domainEvent.CurrentDescription.ShouldBe(updatedDescription);
+    }
+
+    [Fact]
+    public void ChangeDetails_WithSameValues_ShouldNotRaiseDetailsChangedEvent()
+    {
+        // Arrange
+        var game = CreateGame();
+        game.ClearDomainEvents();
+
+        // Act
+        game.ChangeDetails(game.Title, game.Description);
+
+        // Assert
+        game.DomainEvents.ShouldBeEmpty();
+    }
+
+    [Fact]
     public void ChangePrice_WithValidValue_ShouldUpdatePrice()
     {
         // Arrange

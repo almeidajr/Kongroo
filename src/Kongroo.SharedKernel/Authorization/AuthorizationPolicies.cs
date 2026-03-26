@@ -1,4 +1,4 @@
-namespace Kongroo.CloudGames.Identity.Presentation;
+namespace Kongroo.SharedKernel.Authorization;
 
 public static class AuthorizationPolicies
 {

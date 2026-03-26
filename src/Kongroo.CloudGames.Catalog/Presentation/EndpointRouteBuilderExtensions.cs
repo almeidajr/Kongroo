@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+using System.ComponentModel;
+using Kongroo.CloudGames.Catalog.Application;
+using Kongroo.SharedKernel.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Routing;
 
 namespace Kongroo.CloudGames.Catalog.Presentation;
@@ -11,8 +15,129 @@ public static class EndpointRouteBuilderExtensions
         public RouteGroupBuilder MapCatalogEndpoints()
         {
             var routeGroup = endpoints.MapGroup("/catalog").WithTags("Catalog");
+            var gamesGroup = routeGroup.MapGroup("/games");
+
+            gamesGroup
+                .MapPost("/", CreateGameAsync)
+                .RequireAuthorization(AuthorizationPolicies.AdminOnly)
+                .ProducesValidationProblem()
+                .ProducesProblem(StatusCodes.Status401Unauthorized)
+                .ProducesProblem(StatusCodes.Status403Forbidden)
+                .ProducesProblem(StatusCodes.Status500InternalServerError)
+                .WithName("CreateGame")
+                .WithSummary("Create a game")
+                .WithDescription("Creates a new game and returns its public catalog representation.");
+
+            gamesGroup
+                .MapGet("/", GetGamesAsync)
+                .RequireAuthorization()
+                .ProducesProblem(StatusCodes.Status401Unauthorized)
+                .ProducesProblem(StatusCodes.Status500InternalServerError)
+                .WithName("GetGames")
+                .WithSummary("Get games")
+                .WithDescription("Returns all games ordered by title.");
+
+            gamesGroup
+                .MapGet("/{gameId:guid}", GetGameAsync)
+                .RequireAuthorization()
+                .ProducesProblem(StatusCodes.Status401Unauthorized)
+                .ProducesProblem(StatusCodes.Status404NotFound)
+                .ProducesProblem(StatusCodes.Status500InternalServerError)
+                .WithName("GetGameById")
+                .WithSummary("Get a game")
+                .WithDescription("Returns a single game from the catalog.");
+
+            gamesGroup
+                .MapPut("/{gameId:guid}", UpdateGameAsync)
+                .RequireAuthorization(AuthorizationPolicies.AdminOnly)
+                .ProducesValidationProblem()
+                .ProducesProblem(StatusCodes.Status401Unauthorized)
+                .ProducesProblem(StatusCodes.Status403Forbidden)
+                .ProducesProblem(StatusCodes.Status404NotFound)
+                .ProducesProblem(StatusCodes.Status500InternalServerError)
+                .WithName("UpdateGame")
+                .WithSummary("Update a game")
+                .WithDescription("Replaces the editable details of an existing game.");
+
+            gamesGroup
+                .MapDelete("/{gameId:guid}", DeleteGameAsync)
+                .RequireAuthorization(AuthorizationPolicies.AdminOnly)
+                .ProducesProblem(StatusCodes.Status401Unauthorized)
+                .ProducesProblem(StatusCodes.Status403Forbidden)
+                .ProducesProblem(StatusCodes.Status404NotFound)
+                .ProducesProblem(StatusCodes.Status500InternalServerError)
+                .WithName("DeleteGame")
+                .WithSummary("Delete a game")
+                .WithDescription("Deletes an existing game from the catalog.");
 
             return routeGroup;
         }
+    }
+
+    private static async Task<CreatedAtRoute<CreateGameResponse>> CreateGameAsync(
+        CreateGameRequest request,
+        CreateGameCommandHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        var command = new CreateGameCommand(request.Title, request.Description, request.PriceAmount, request.Currency);
+        var response = await handler.HandleAsync(command, cancellationToken);
+
+        return TypedResults.CreatedAtRoute(response, "GetGameById", new { gameId = response.Id });
+    }
+
+    private static async Task<Ok<IReadOnlyList<GetGameResponse>>> GetGamesAsync(
+        GetGamesQueryHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        var query = new GetGamesQuery();
+        var response = await handler.HandleAsync(query, cancellationToken);
+
+        return TypedResults.Ok(response);
+    }
+
+    private static async Task<Ok<GetGameResponse>> GetGameAsync(
+        [Description("Unique identifier of the game to retrieve.")] Guid gameId,
+        GetGameQueryHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        var query = new GetGameQuery(gameId);
+        var response = await handler.HandleAsync(query, cancellationToken);
+
+        return TypedResults.Ok(response);
+    }
+
+    private static async Task<Ok<GetGameResponse>> UpdateGameAsync(
+        [Description("Unique identifier of the game to update.")] Guid gameId,
+        UpdateGameRequest request,
+        UpdateGameCommandHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        var command = new UpdateGameCommand(
+            gameId,
+            request.Title,
+            request.Description,
+            request.PriceAmount,
+            request.Currency,
+            request.Status
+        );
+        var response = await handler.HandleAsync(command, cancellationToken);
+
+        return TypedResults.Ok(response);
+    }
+
+    private static async Task<NoContent> DeleteGameAsync(
+        [Description("Unique identifier of the game to delete.")] Guid gameId,
+        DeleteGameCommandHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        var command = new DeleteGameCommand(gameId);
+        await handler.HandleAsync(command, cancellationToken);
+
+        return TypedResults.NoContent();
     }
 }

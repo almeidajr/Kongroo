@@ -6,9 +6,9 @@ public class Game : Entity<GameId>
 {
     private Game() { }
 
-    public required GameTitle Title { get; init; }
+    public GameTitle Title { get; private set; } = null!;
 
-    public required GameDescription Description { get; init; }
+    public GameDescription Description { get; private set; } = null!;
 
     public Money Price { get; private set; } = Money.Zero;
 
@@ -16,6 +16,10 @@ public class Game : Entity<GameId>
 
     public static Game Create(GameTitle title, GameDescription description, Money price)
     {
+        ArgumentNullException.ThrowIfNull(title);
+        ArgumentNullException.ThrowIfNull(description);
+        ArgumentNullException.ThrowIfNull(price);
+
         var game = new Game
         {
             Id = GameId.Create(),
@@ -30,8 +34,27 @@ public class Game : Entity<GameId>
         return game;
     }
 
+    public void ChangeDetails(GameTitle title, GameDescription description)
+    {
+        ArgumentNullException.ThrowIfNull(title);
+        ArgumentNullException.ThrowIfNull(description);
+
+        if (Title == title && Description == description)
+        {
+            return;
+        }
+
+        var previousTitle = Title;
+        var previousDescription = Description;
+        Title = title;
+        Description = description;
+        RaiseDomainEvent(new GameDetailsChangedDomainEvent(Id, previousTitle, Title, previousDescription, Description));
+    }
+
     public void ChangePrice(Money price)
     {
+        ArgumentNullException.ThrowIfNull(price);
+
         if (Price == price)
         {
             return;

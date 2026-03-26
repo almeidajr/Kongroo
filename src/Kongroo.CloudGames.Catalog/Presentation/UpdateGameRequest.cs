@@ -1,0 +1,27 @@
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using Kongroo.CloudGames.Catalog.Domain;
+
+namespace Kongroo.CloudGames.Catalog.Presentation;
+
+public sealed record UpdateGameRequest(
+    [property: Required]
+    [property: MinLength(GameTitle.MinLength)]
+    [property: MaxLength(GameTitle.MaxLength)]
+    [property: Description("Display title of the game.")]
+        string Title,
+    [property: Required]
+    [property: MinLength(GameDescription.MinLength)]
+    [property: MaxLength(GameDescription.MaxLength)]
+    [property: Description("Detailed summary of the game.")]
+        string Description,
+    [property: Required]
+    [property: Range(typeof(decimal), "0", "79228162514264337593543950335")]
+    [property: Description("Current game price amount.")]
+        decimal PriceAmount,
+    [property: Required]
+    [property: AllowedValues("BRL", "EUR", "USD")]
+    [property: Description("Current game price currency code.")]
+        string Currency,
+    [property: Description("Current publishing status of the game.")] GameStatus Status
+);

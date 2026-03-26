@@ -1,3 +1,4 @@
+using Kongroo.CloudGames.Catalog.Application;
 using Kongroo.CloudGames.Catalog.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +13,19 @@ public static class ServiceCollectionExtensions
         public IServiceCollection AddCatalogModule(IConfiguration configuration)
         {
             services.AddValidation();
+            services.AddApplication();
             services.AddInfrastructure(configuration);
+
+            return services;
+        }
+
+        private IServiceCollection AddApplication()
+        {
+            services.AddScoped<CreateGameCommandHandler>();
+            services.AddScoped<GetGameQueryHandler>();
+            services.AddScoped<GetGamesQueryHandler>();
+            services.AddScoped<UpdateGameCommandHandler>();
+            services.AddScoped<DeleteGameCommandHandler>();
 
             return services;
         }
