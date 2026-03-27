@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Kongroo.CloudGames.Catalog.Domain;
+using Kongroo.SharedKernel.Attributes;
 
 namespace Kongroo.CloudGames.Catalog.Presentation;
 
@@ -16,7 +17,7 @@ public sealed record CreateGameRequest(
     [property: Description("Detailed summary of the game.")]
         string Description,
     [property: Required]
-    [property: Range(typeof(decimal), "0", "79228162514264337593543950335")]
+    [property: NonNegative<decimal>]
     [property: Description("Current game price amount.")]
         decimal PriceAmount,
     [property: Description("Current game price currency code.")] Currency Currency
