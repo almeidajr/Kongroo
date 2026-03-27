@@ -17,7 +17,7 @@ public class GetGamesQueryHandler(CatalogDbContext context)
                 game.Title.Value,
                 game.Description.Value,
                 game.Price.Amount,
-                game.Price.Currency.Code,
+                game.Price.Currency,
                 game.Status
             ))
             .ToListAsync(cancellationToken);

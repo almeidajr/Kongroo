@@ -7,10 +7,11 @@ public class CreateGameCommandHandler(CatalogDbContext context)
 {
     public async Task<CreateGameResponse> HandleAsync(CreateGameCommand command, CancellationToken cancellationToken)
     {
-        var title = GameTitle.From(command.Title);
-        var description = GameDescription.From(command.Description);
-        var price = Money.From(command.PriceAmount, Currency.From(command.Currency));
-        var game = Game.Create(title, description, price);
+        var game = Game.Create(
+            GameTitle.From(command.Title),
+            GameDescription.From(command.Description),
+            Money.From(command.PriceAmount, command.Currency)
+        );
 
         context.Games.Add(game);
         await context.SaveChangesAsync(cancellationToken);
@@ -20,7 +21,7 @@ public class CreateGameCommandHandler(CatalogDbContext context)
             game.Title.Value,
             game.Description.Value,
             game.Price.Amount,
-            game.Price.Currency.Code,
+            game.Price.Currency,
             game.Status
         );
     }

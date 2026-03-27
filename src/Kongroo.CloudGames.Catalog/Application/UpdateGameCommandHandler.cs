@@ -16,7 +16,7 @@ public class UpdateGameCommandHandler(CatalogDbContext context)
             ?? throw new NotFoundException(nameof(Game), $"identifier '{command.GameId}'");
 
         game.ChangeDetails(GameTitle.From(command.Title), GameDescription.From(command.Description));
-        game.ChangePrice(Money.From(command.PriceAmount, Currency.From(command.Currency)));
+        game.ChangePrice(Money.From(command.PriceAmount, command.Currency));
         game.ChangeStatus(command.Status);
 
         await context.SaveChangesAsync(cancellationToken);
@@ -26,7 +26,7 @@ public class UpdateGameCommandHandler(CatalogDbContext context)
             game.Title.Value,
             game.Description.Value,
             game.Price.Amount,
-            game.Price.Currency.Code,
+            game.Price.Currency,
             game.Status
         );
     }

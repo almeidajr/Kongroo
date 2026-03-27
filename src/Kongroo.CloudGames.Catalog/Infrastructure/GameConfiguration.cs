@@ -29,8 +29,11 @@ public class GameConfiguration : IEntityTypeConfiguration<Game>
 
                 moneyBuilder
                     .Property(money => money.Currency)
-                    .HasConversion(currency => currency.Code, code => Currency.From(code))
-                    .HasMaxLength(3)
+                    .HasConversion(
+                        currency => CurrencyMappings.ToCode(currency),
+                        code => CurrencyMappings.FromCode(code)
+                    )
+                    .HasMaxLength(CurrencyMappings.Length)
                     .IsFixedLength();
             }
         );

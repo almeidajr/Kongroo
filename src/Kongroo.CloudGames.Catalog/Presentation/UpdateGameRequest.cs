@@ -19,9 +19,6 @@ public sealed record UpdateGameRequest(
     [property: Range(typeof(decimal), "0", "79228162514264337593543950335")]
     [property: Description("Current game price amount.")]
         decimal PriceAmount,
-    [property: Required]
-    [property: AllowedValues("BRL", "EUR", "USD")]
-    [property: Description("Current game price currency code.")]
-        string Currency,
+    [property: Description("Current game price currency code.")] Currency Currency,
     [property: Description("Current publishing status of the game.")] GameStatus Status
 );

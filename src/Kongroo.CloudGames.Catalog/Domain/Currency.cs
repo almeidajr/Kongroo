@@ -1,17 +1,45 @@
+using System.Text.Json.Serialization;
+
 namespace Kongroo.CloudGames.Catalog.Domain;
 
-public record Currency(string Code)
+public enum Currency
 {
-    public static readonly Currency Brl = new("BRL");
-    public static readonly Currency Eur = new("EUR");
-    public static readonly Currency Usd = new("USD");
+    [JsonStringEnumMemberName(CurrencyCodes.Brl)]
+    Brl,
 
-    public static Currency From(string code) =>
+    [JsonStringEnumMemberName(CurrencyCodes.Eur)]
+    Eur,
+
+    [JsonStringEnumMemberName(CurrencyCodes.Usd)]
+    Usd,
+}
+
+public static class CurrencyCodes
+{
+    public const string Brl = "BRL";
+    public const string Eur = "EUR";
+    public const string Usd = "USD";
+}
+
+public static class CurrencyMappings
+{
+    public const int Length = 3;
+
+    public static string ToCode(Currency currency) =>
+        currency switch
+        {
+            Currency.Brl => CurrencyCodes.Brl,
+            Currency.Eur => CurrencyCodes.Eur,
+            Currency.Usd => CurrencyCodes.Usd,
+            _ => throw new ArgumentOutOfRangeException(nameof(currency), currency, "Unsupported currency."),
+        };
+
+    public static Currency FromCode(string code) =>
         code switch
         {
-            "BRL" => Brl,
-            "EUR" => Eur,
-            "USD" => Usd,
+            CurrencyCodes.Brl => Currency.Brl,
+            CurrencyCodes.Eur => Currency.Eur,
+            CurrencyCodes.Usd => Currency.Usd,
             _ => throw new ArgumentException($"Unsupported currency: {code}", nameof(code)),
         };
 }

@@ -1,6 +1,8 @@
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using HealthChecks.UI.Client;
 using Kongroo.CloudGames.Api;
 using Kongroo.CloudGames.Api.OpenApi;
@@ -19,6 +21,12 @@ using Scalar.AspNetCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.Converters.Add(
+        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, allowIntegerValues: false)
+    )
+);
 
 builder.Services.AddSerilog(configuration =>
     configuration

@@ -7,6 +7,6 @@ public sealed record UpdateGameCommand(
     string Title,
     string Description,
     decimal PriceAmount,
-    string Currency,
+    Currency Currency,
     GameStatus Status
 );

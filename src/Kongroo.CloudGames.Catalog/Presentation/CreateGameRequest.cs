@@ -19,8 +19,5 @@ public sealed record CreateGameRequest(
     [property: Range(typeof(decimal), "0", "79228162514264337593543950335")]
     [property: Description("Current game price amount.")]
         decimal PriceAmount,
-    [property: Required]
-    [property: AllowedValues("BRL", "EUR", "USD")]
-    [property: Description("Current game price currency code.")]
-        string Currency
+    [property: Description("Current game price currency code.")] Currency Currency
 );
