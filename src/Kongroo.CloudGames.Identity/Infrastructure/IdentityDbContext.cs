@@ -7,7 +7,7 @@ public class IdentityDbContext(DbContextOptions<IdentityDbContext> options) : Db
 {
     public const string Schema = "identity";
 
-    public required DbSet<User> Users { get; init; }
+    public DbSet<User> Users => Set<User>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
