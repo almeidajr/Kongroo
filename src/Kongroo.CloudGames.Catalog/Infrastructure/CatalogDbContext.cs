@@ -7,7 +7,7 @@ public class CatalogDbContext(DbContextOptions<CatalogDbContext> options) : DbCo
 {
     public const string Schema = "catalog";
 
-    public required DbSet<Game> Games { get; init; }
+    public DbSet<Game> Games => Set<Game>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
