@@ -16,6 +16,7 @@
   </Folder>
 
   <Folder Name="/tests/">
+    <Project Path="tests/Kongroo.CloudGames.IntegrationTests/Kongroo.CloudGames.IntegrationTests.csproj" />
     <Project Path="tests/Kongroo.CloudGames.UnitTests/Kongroo.CloudGames.UnitTests.csproj" />
   </Folder>
 </Solution>
