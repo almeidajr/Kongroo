@@ -1,4 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Kongroo.SharedKernel.Exceptions;
 
@@ -10,7 +9,7 @@ public static class ClaimsPrincipalExtensions
     {
         public Guid GetUserId()
         {
-            var subject = user.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            var subject = user.FindFirstValue(ClaimTypes.NameIdentifier);
 
             return Guid.TryParse(subject, out var userId)
                 ? userId
