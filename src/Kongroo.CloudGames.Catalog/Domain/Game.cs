@@ -1,9 +1,12 @@
 using Kongroo.SharedKernel;
+using Kongroo.SharedKernel.Exceptions;
 
 namespace Kongroo.CloudGames.Catalog.Domain;
 
 public class Game : Entity<GameId>
 {
+    private readonly List<Promotion> _promotions = [];
+
     private Game() { }
 
     public GameTitle Title { get; private set; } = null!;
@@ -13,6 +16,8 @@ public class Game : Entity<GameId>
     public Money Price { get; private set; } = Money.Zero;
 
     public GameStatus Status { get; private set; }
+
+    public IReadOnlyCollection<Promotion> Promotions => _promotions.AsReadOnly();
 
     public static Game Create(GameTitle title, GameDescription description, Money price)
     {
@@ -75,5 +80,35 @@ public class Game : Entity<GameId>
         var previousStatus = Status;
         Status = status;
         RaiseDomainEvent(new GameStatusChangedDomainEvent(Id, previousStatus, Status));
+    }
+
+    public Promotion CreatePromotion(Percentage discount, DateTimeRange activeRange)
+    {
+        ArgumentNullException.ThrowIfNull(discount);
+        ArgumentNullException.ThrowIfNull(activeRange);
+
+        if (_promotions.Any(promotion => promotion.ActiveRange.Overlaps(activeRange)))
+        {
+            throw new ConflictException(nameof(Promotion), "active range overlaps with an existing promotion");
+        }
+
+        var promotion = Promotion.Create(discount, activeRange);
+        _promotions.Add(promotion);
+        RaiseDomainEvent(new PromotionCreatedDomainEvent(Id, promotion.Id, promotion.Discount, promotion.ActiveRange));
+
+        return promotion;
+    }
+
+    public GamePurchaseQuote QuotePurchase(DateTimeOffset asOf)
+    {
+        if (Status != GameStatus.Published)
+        {
+            throw new ConflictException(nameof(Game), "game must be published to be purchased");
+        }
+
+        var promotion = _promotions.SingleOrDefault(candidate => candidate.ActiveRange.Contains(asOf));
+        var finalPrice = promotion is null ? Price : Price.ApplyDiscount(promotion.Discount);
+
+        return new GamePurchaseQuote(Id, Title, Price, finalPrice, promotion?.Id);
     }
 }
