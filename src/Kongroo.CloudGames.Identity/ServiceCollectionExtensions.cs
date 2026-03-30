@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Kongroo.CloudGames.Identity;
 
@@ -34,7 +35,7 @@ public static class ServiceCollectionExtensions
 
         private IServiceCollection AddInfrastructure(IConfiguration configuration)
         {
-            services.AddSingleton(TimeProvider.System);
+            services.TryAddSingleton(TimeProvider.System);
 
             services
                 .AddOptions<JwtOptions>()

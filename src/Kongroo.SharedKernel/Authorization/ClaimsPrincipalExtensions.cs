@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Kongroo.SharedKernel.Exceptions;
 
-namespace Kongroo.CloudGames.Identity.Presentation;
+namespace Kongroo.SharedKernel.Authorization;
 
 public static class ClaimsPrincipalExtensions
 {
@@ -9,7 +9,7 @@ public static class ClaimsPrincipalExtensions
     {
         public Guid GetUserId()
         {
-            var subject = user.FindFirstValue(ClaimTypes.NameIdentifier);
+            var subject = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             return Guid.TryParse(subject, out var userId)
                 ? userId
