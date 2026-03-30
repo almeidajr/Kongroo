@@ -30,6 +30,16 @@ public static class EndpointRouteBuilderExtensions
                 );
 
             routeGroup
+                .MapGet("/users", GetUsersAsync)
+                .RequireAuthorization(AuthorizationPolicies.AdminOnly)
+                .ProducesProblem(StatusCodes.Status401Unauthorized)
+                .ProducesProblem(StatusCodes.Status403Forbidden)
+                .ProducesProblem(StatusCodes.Status500InternalServerError)
+                .WithName("GetUsers")
+                .WithSummary("Get users")
+                .WithDescription("Returns all user accounts ordered by username for administrative management.");
+
+            routeGroup
                 .MapGet("/users/me", GetCurrentUserAsync)
                 .RequireAuthorization()
                 .ProducesProblem(StatusCodes.Status401Unauthorized)
@@ -48,7 +58,20 @@ public static class EndpointRouteBuilderExtensions
                 .ProducesProblem(StatusCodes.Status500InternalServerError)
                 .WithName("GetUserById")
                 .WithSummary("Get a user account")
-                .WithDescription("Returns the public profile information for an existing user.");
+                .WithDescription("Returns the administrative management view for an existing user account.");
+
+            routeGroup
+                .MapPut("/users/{userId:guid}/role", UpdateUserRoleAsync)
+                .RequireAuthorization(AuthorizationPolicies.AdminOnly)
+                .ProducesValidationProblem()
+                .ProducesProblem(StatusCodes.Status401Unauthorized)
+                .ProducesProblem(StatusCodes.Status403Forbidden)
+                .ProducesProblem(StatusCodes.Status404NotFound)
+                .ProducesProblem(StatusCodes.Status409Conflict)
+                .ProducesProblem(StatusCodes.Status500InternalServerError)
+                .WithName("UpdateUserRole")
+                .WithSummary("Update a user role")
+                .WithDescription("Sets the role of an existing user account to user or admin.");
 
             routeGroup
                 .MapPost("/tokens", CreateAccessTokenAsync)
@@ -76,6 +99,17 @@ public static class EndpointRouteBuilderExtensions
         return TypedResults.CreatedAtRoute(response, "GetUserById", new { userId = response.Id });
     }
 
+    private static async Task<Ok<IReadOnlyList<GetUserResponse>>> GetUsersAsync(
+        GetUsersQueryHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        var query = new GetUsersQuery();
+        var response = await handler.HandleAsync(query, cancellationToken);
+
+        return TypedResults.Ok(response);
+    }
+
     private static async Task<Ok<GetUserResponse>> GetCurrentUserAsync(
         ClaimsPrincipal user,
         GetUserQueryHandler handler,
@@ -97,6 +131,20 @@ public static class EndpointRouteBuilderExtensions
     {
         var query = new GetUserQuery(userId);
         var response = await handler.HandleAsync(query, cancellationToken);
+
+        return TypedResults.Ok(response);
+    }
+
+    private static async Task<Ok<GetUserResponse>> UpdateUserRoleAsync(
+        [Description("Unique identifier of the user to update.")] Guid userId,
+        UpdateUserRoleRequest request,
+        ClaimsPrincipal user,
+        UpdateUserRoleCommandHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        var command = new UpdateUserRoleCommand(user.GetUserId(), userId, request.Role);
+        var response = await handler.HandleAsync(command, cancellationToken);
 
         return TypedResults.Ok(response);
     }

@@ -26,6 +26,8 @@ public static class ServiceCollectionExtensions
             services.AddScoped<AuthenticateUserCommandHandler>();
             services.AddScoped<CreateUserCommandHandler>();
             services.AddScoped<GetUserQueryHandler>();
+            services.AddScoped<GetUsersQueryHandler>();
+            services.AddScoped<UpdateUserRoleCommandHandler>();
 
             return services;
         }

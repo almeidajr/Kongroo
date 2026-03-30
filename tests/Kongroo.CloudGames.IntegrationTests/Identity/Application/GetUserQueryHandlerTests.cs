@@ -15,7 +15,7 @@ public sealed class GetUserQueryHandlerTests(PostgreSqlFixture postgreSqlFixture
     private readonly IdentityTestDatabase _database = new(postgreSqlFixture);
 
     [Fact]
-    public async Task HandleAsync_WithExistingUserId_ShouldReturnUser()
+    public async Task HandleAsync_WithExistingUserId_ShouldReturnManagedUser()
     {
         // Arrange
         await using var context = _database.CreateDbContext();
@@ -35,7 +35,8 @@ public sealed class GetUserQueryHandlerTests(PostgreSqlFixture postgreSqlFixture
             () => response.Id.ShouldBe(userId.Value),
             () => response.Username.ShouldBe("kongroo"),
             () => response.Email.ShouldBe("kongroo@example.com"),
-            () => response.Name.ShouldBe("Kongroo Cloud Games")
+            () => response.Name.ShouldBe("Kongroo Cloud Games"),
+            () => response.Role.ShouldBe(UserRole.User.Value)
         );
     }
 
