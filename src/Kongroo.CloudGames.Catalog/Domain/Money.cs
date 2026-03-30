@@ -13,4 +13,13 @@ public sealed record Money(decimal Amount, Currency Currency)
 
         return new Money(amount, currency);
     }
+
+    public Money ApplyDiscount(Percentage percentage)
+    {
+        ArgumentNullException.ThrowIfNull(percentage);
+
+        var discountedAmount = decimal.Round(Amount - percentage.ApplyTo(Amount), 2, MidpointRounding.AwayFromZero);
+
+        return From(discountedAmount, Currency);
+    }
 }
