@@ -16,9 +16,10 @@ public static class EndpointRouteBuilderExtensions
         public RouteGroupBuilder MapIdentityEndpoints()
         {
             var routeGroup = endpoints.MapGroup("/identity").WithTags("Identity");
+            var usersGroup = routeGroup.MapGroup("/users");
 
-            routeGroup
-                .MapPost("/users", CreateUserAsync)
+            usersGroup
+                .MapPost("/", CreateUserAsync)
                 .AllowAnonymous()
                 .ProducesValidationProblem()
                 .ProducesProblem(StatusCodes.Status409Conflict)
@@ -29,8 +30,8 @@ public static class EndpointRouteBuilderExtensions
                     "Creates a user account and returns the public profile information for the new identity."
                 );
 
-            routeGroup
-                .MapGet("/users", GetUsersAsync)
+            usersGroup
+                .MapGet("/", GetUsersAsync)
                 .RequireAuthorization(AuthorizationPolicies.AdminOnly)
                 .ProducesProblem(StatusCodes.Status401Unauthorized)
                 .ProducesProblem(StatusCodes.Status403Forbidden)
@@ -39,8 +40,8 @@ public static class EndpointRouteBuilderExtensions
                 .WithSummary("Get users")
                 .WithDescription("Returns all user accounts ordered by username for administrative management.");
 
-            routeGroup
-                .MapGet("/users/me", GetCurrentUserAsync)
+            usersGroup
+                .MapGet("/me", GetCurrentUserAsync)
                 .RequireAuthorization()
                 .ProducesProblem(StatusCodes.Status401Unauthorized)
                 .ProducesProblem(StatusCodes.Status404NotFound)
@@ -49,8 +50,8 @@ public static class EndpointRouteBuilderExtensions
                 .WithSummary("Get the authenticated user account")
                 .WithDescription("Returns the public profile information for the authenticated user.");
 
-            routeGroup
-                .MapGet("/users/{userId:guid}", GetUserAsync)
+            usersGroup
+                .MapGet("/{userId:guid}", GetUserAsync)
                 .RequireAuthorization(AuthorizationPolicies.AdminOnly)
                 .ProducesProblem(StatusCodes.Status401Unauthorized)
                 .ProducesProblem(StatusCodes.Status403Forbidden)
@@ -60,8 +61,8 @@ public static class EndpointRouteBuilderExtensions
                 .WithSummary("Get a user account")
                 .WithDescription("Returns the administrative management view for an existing user account.");
 
-            routeGroup
-                .MapPut("/users/{userId:guid}/role", UpdateUserRoleAsync)
+            usersGroup
+                .MapPut("/{userId:guid}/role", UpdateUserRoleAsync)
                 .RequireAuthorization(AuthorizationPolicies.AdminOnly)
                 .ProducesValidationProblem()
                 .ProducesProblem(StatusCodes.Status401Unauthorized)
