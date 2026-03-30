@@ -16,7 +16,7 @@ public class GetUserQueryHandler(IdentityDbContext context)
                 user.Username.Value,
                 user.Email.Value,
                 user.Name.Value,
-                user.Role.Value
+                user.Role
             ))
             .SingleOrDefaultAsync(cancellationToken)
         ?? throw new NotFoundException(nameof(User), $"identifier '{query.UserId}'");

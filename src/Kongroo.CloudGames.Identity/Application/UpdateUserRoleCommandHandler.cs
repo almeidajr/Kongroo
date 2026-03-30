@@ -15,10 +15,9 @@ public class UpdateUserRoleCommandHandler(IdentityDbContext context)
                 .SingleOrDefaultAsync(cancellationToken)
             ?? throw new NotFoundException(nameof(User), $"identifier '{command.TargetUserId}'");
 
-        var role = UserRole.From(command.Role);
-        ThrowIfSelfDemotion(command.ActingUserId, user.Id.Value, role);
+        ThrowIfSelfDemotion(command.ActingUserId, user.Id.Value, command.Role);
 
-        if (role == UserRole.Admin)
+        if (command.Role == UserRole.Admin)
         {
             user.GrantAdmin();
         }
@@ -29,13 +28,7 @@ public class UpdateUserRoleCommandHandler(IdentityDbContext context)
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return new GetUserResponse(
-            user.Id.Value,
-            user.Username.Value,
-            user.Email.Value,
-            user.Name.Value,
-            user.Role.Value
-        );
+        return new GetUserResponse(user.Id.Value, user.Username.Value, user.Email.Value, user.Name.Value, user.Role);
     }
 
     private static void ThrowIfSelfDemotion(Guid actingUserId, Guid targetUserId, UserRole role)

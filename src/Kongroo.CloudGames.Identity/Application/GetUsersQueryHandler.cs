@@ -17,7 +17,7 @@ public class GetUsersQueryHandler(IdentityDbContext context)
                 user.Username.Value,
                 user.Email.Value,
                 user.Name.Value,
-                user.Role.Value
+                user.Role
             ))
             .ToListAsync(cancellationToken);
 }

@@ -35,14 +35,14 @@ public sealed class UpdateUserRoleCommandHandlerTests(PostgreSqlFixture postgreS
 
         // Act
         var response = await handler.HandleAsync(
-            new UpdateUserRoleCommand(actingUserId.Value, targetUserId.Value, UserRole.Admin.Value),
+            new UpdateUserRoleCommand(actingUserId.Value, targetUserId.Value, UserRole.Admin),
             TestContext.Current.CancellationToken
         );
 
         // Assert
         response.ShouldSatisfyAllConditions(
             () => response.Id.ShouldBe(targetUserId.Value),
-            () => response.Role.ShouldBe(UserRole.Admin.Value)
+            () => response.Role.ShouldBe(UserRole.Admin)
         );
     }
 
@@ -66,14 +66,14 @@ public sealed class UpdateUserRoleCommandHandlerTests(PostgreSqlFixture postgreS
 
         // Act
         var response = await handler.HandleAsync(
-            new UpdateUserRoleCommand(actingUserId.Value, targetUserId.Value, UserRole.User.Value),
+            new UpdateUserRoleCommand(actingUserId.Value, targetUserId.Value, UserRole.User),
             TestContext.Current.CancellationToken
         );
 
         // Assert
         response.ShouldSatisfyAllConditions(
             () => response.Id.ShouldBe(targetUserId.Value),
-            () => response.Role.ShouldBe(UserRole.User.Value)
+            () => response.Role.ShouldBe(UserRole.User)
         );
     }
 
@@ -93,7 +93,7 @@ public sealed class UpdateUserRoleCommandHandlerTests(PostgreSqlFixture postgreS
         // Act
         var exception = await Should.ThrowAsync<NotFoundException>(() =>
             handler.HandleAsync(
-                new UpdateUserRoleCommand(actingUserId.Value, missingUserId, UserRole.Admin.Value),
+                new UpdateUserRoleCommand(actingUserId.Value, missingUserId, UserRole.Admin),
                 TestContext.Current.CancellationToken
             )
         );
@@ -116,14 +116,14 @@ public sealed class UpdateUserRoleCommandHandlerTests(PostgreSqlFixture postgreS
 
         var handler = new UpdateUserRoleCommandHandler(context);
         await handler.HandleAsync(
-            new UpdateUserRoleCommand(adminUserId.Value, adminUserId.Value, UserRole.Admin.Value),
+            new UpdateUserRoleCommand(adminUserId.Value, adminUserId.Value, UserRole.Admin),
             TestContext.Current.CancellationToken
         );
 
         // Act
         var exception = await Should.ThrowAsync<ConflictException>(() =>
             handler.HandleAsync(
-                new UpdateUserRoleCommand(adminUserId.Value, adminUserId.Value, UserRole.User.Value),
+                new UpdateUserRoleCommand(adminUserId.Value, adminUserId.Value, UserRole.User),
                 TestContext.Current.CancellationToken
             )
         );
@@ -160,7 +160,7 @@ public sealed class UpdateUserRoleCommandHandlerTests(PostgreSqlFixture postgreS
 
         // Act
         var response = await handler.HandleAsync(
-            new UpdateUserRoleCommand(actingUserId.Value, targetUserId.Value, UserRole.User.Value),
+            new UpdateUserRoleCommand(actingUserId.Value, targetUserId.Value, UserRole.User),
             TestContext.Current.CancellationToken
         );
 
@@ -170,7 +170,7 @@ public sealed class UpdateUserRoleCommandHandlerTests(PostgreSqlFixture postgreS
             () => response.Username.ShouldBe("target-user"),
             () => response.Email.ShouldBe("target-user@example.com"),
             () => response.Name.ShouldBe("Target User"),
-            () => response.Role.ShouldBe(UserRole.User.Value)
+            () => response.Role.ShouldBe(UserRole.User)
         );
     }
 

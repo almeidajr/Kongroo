@@ -35,9 +35,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .Property(user => user.Name)
             .HasConversion(name => name.Value, value => PersonName.From(value))
             .HasMaxLength(PersonName.MaxLength);
-        builder
-            .Property(user => user.Role)
-            .HasConversion(role => role.Value, value => UserRole.From(value))
-            .HasMaxLength(UserRole.MaxLength);
+        builder.Property(user => user.Role).HasConversion<string>().HasMaxLength(16);
     }
 }

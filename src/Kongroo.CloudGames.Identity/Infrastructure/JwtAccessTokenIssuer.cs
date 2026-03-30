@@ -44,6 +44,6 @@ public sealed class JwtAccessTokenIssuer(IOptions<JwtOptions> options, TimeProvi
             new Claim(JwtRegisteredClaimNames.UniqueName, user.Username.Value),
             new Claim(JwtRegisteredClaimNames.Email, user.Email.Value),
             new Claim(JwtRegisteredClaimNames.Name, user.Name.Value),
-            new Claim(ClaimTypes.Role, user.Role.Value),
+            new Claim(ClaimTypes.Role, user.Role.ToString()),
         ]);
 }

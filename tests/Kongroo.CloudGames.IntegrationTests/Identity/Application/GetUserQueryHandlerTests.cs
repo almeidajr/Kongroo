@@ -36,7 +36,7 @@ public sealed class GetUserQueryHandlerTests(PostgreSqlFixture postgreSqlFixture
             () => response.Username.ShouldBe("kongroo"),
             () => response.Email.ShouldBe("kongroo@example.com"),
             () => response.Name.ShouldBe("Kongroo Cloud Games"),
-            () => response.Role.ShouldBe(UserRole.User.Value)
+            () => response.Role.ShouldBe(UserRole.User)
         );
     }
 
