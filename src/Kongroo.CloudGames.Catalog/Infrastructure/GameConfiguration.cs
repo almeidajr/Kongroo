@@ -37,5 +37,34 @@ public class GameConfiguration : IEntityTypeConfiguration<Game>
                     .IsFixedLength();
             }
         );
+
+        builder.OwnsMany(
+            game => game.Promotions,
+            promotionBuilder =>
+            {
+                promotionBuilder.ToTable("promotions");
+
+                promotionBuilder.HasKey(promotion => promotion.Id);
+                promotionBuilder
+                    .Property(promotion => promotion.Id)
+                    .HasConversion(id => id.Value, value => PromotionId.From(value));
+
+                promotionBuilder
+                    .Property(promotion => promotion.Discount)
+                    .HasConversion(discount => discount.Value, value => Percentage.From(value))
+                    .HasPrecision(5, 2);
+
+                promotionBuilder.OwnsOne(
+                    promotion => promotion.ActiveRange,
+                    rangeBuilder =>
+                    {
+                        rangeBuilder.Property(range => range.Start).HasPrecision(0);
+                        rangeBuilder.Property(range => range.End).HasPrecision(0);
+                    }
+                );
+            }
+        );
+
+        builder.Navigation(game => game.Promotions).UsePropertyAccessMode(PropertyAccessMode.Field);
     }
 }

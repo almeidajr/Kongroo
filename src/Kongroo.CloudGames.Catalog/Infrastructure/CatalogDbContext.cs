@@ -9,9 +9,12 @@ public class CatalogDbContext(DbContextOptions<CatalogDbContext> options) : DbCo
 
     public DbSet<Game> Games => Set<Game>();
 
+    public DbSet<Order> Orders => Set<Order>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(Schema);
         modelBuilder.ApplyConfiguration(new GameConfiguration());
+        modelBuilder.ApplyConfiguration(new OrderConfiguration());
     }
 }

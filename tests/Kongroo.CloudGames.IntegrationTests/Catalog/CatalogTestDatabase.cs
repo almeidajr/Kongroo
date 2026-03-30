@@ -24,7 +24,14 @@ public sealed class CatalogTestDatabase(PostgreSqlFixture fixture)
         await using var context = CreateDbContext();
         await context.Database.MigrateAsync(cancellationToken);
         await context.Database.ExecuteSqlRawAsync(
-            $"""TRUNCATE TABLE "{CatalogDbContext.Schema}"."games";""",
+            $"""
+            TRUNCATE TABLE
+                "{CatalogDbContext.Schema}"."order_lines",
+                "{CatalogDbContext.Schema}"."orders",
+                "{CatalogDbContext.Schema}"."promotions",
+                "{CatalogDbContext.Schema}"."games"
+            CASCADE;
+            """,
             cancellationToken
         );
     }

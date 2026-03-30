@@ -1,23 +1,30 @@
 namespace Kongroo.CloudGames.Catalog.Domain;
 
-public sealed record OrderLine(
-    GameId GameId,
-    GameTitle GameTitle,
-    Money ListPrice,
-    Money FinalPrice,
-    PromotionId? AppliedPromotionId
-)
+public sealed record OrderLine
 {
+    private OrderLine() { }
+
+    public required GameId GameId { get; init; }
+
+    public required GameTitle GameTitle { get; init; }
+
+    public required Money ListPrice { get; init; }
+
+    public required Money FinalPrice { get; init; }
+
+    public required PromotionId? AppliedPromotionId { get; init; }
+
     public static OrderLine FromQuote(GamePurchaseQuote quote)
     {
         ArgumentNullException.ThrowIfNull(quote);
 
-        return new OrderLine(
-            quote.GameId,
-            quote.GameTitle,
-            quote.ListPrice,
-            quote.FinalPrice,
-            quote.AppliedPromotionId
-        );
+        return new OrderLine
+        {
+            GameId = quote.GameId,
+            GameTitle = quote.GameTitle,
+            ListPrice = quote.ListPrice,
+            FinalPrice = quote.FinalPrice,
+            AppliedPromotionId = quote.AppliedPromotionId,
+        };
     }
 }

@@ -1,12 +1,25 @@
+using Kongroo.SharedKernel;
+
 namespace Kongroo.CloudGames.Catalog.Domain;
 
-public sealed record Promotion(PromotionId Id, Percentage Discount, DateTimeRange ActiveRange)
+public sealed class Promotion : Entity<PromotionId>
 {
+    private Promotion() { }
+
+    public required Percentage Discount { get; init; }
+
+    public required DateTimeRange ActiveRange { get; init; }
+
     public static Promotion Create(Percentage discount, DateTimeRange activeRange)
     {
         ArgumentNullException.ThrowIfNull(discount);
         ArgumentNullException.ThrowIfNull(activeRange);
 
-        return new Promotion(PromotionId.Create(), discount, activeRange);
+        return new Promotion
+        {
+            Id = PromotionId.Create(),
+            Discount = discount,
+            ActiveRange = activeRange,
+        };
     }
 }
