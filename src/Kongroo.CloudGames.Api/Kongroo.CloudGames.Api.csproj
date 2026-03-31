@@ -27,5 +27,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Kongroo.CloudGames.Catalog\Kongroo.CloudGames.Catalog.csproj" />
     <ProjectReference Include="..\Kongroo.CloudGames.Identity\Kongroo.CloudGames.Identity.csproj" />
+    <ProjectReference Include="..\Kongroo.CloudGames.Library\Kongroo.CloudGames.Library.csproj" />
   </ItemGroup>
 </Project>

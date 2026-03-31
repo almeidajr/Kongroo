@@ -13,6 +13,8 @@ using Kongroo.CloudGames.Identity;
 using Kongroo.CloudGames.Identity.Domain;
 using Kongroo.CloudGames.Identity.Infrastructure;
 using Kongroo.CloudGames.Identity.Presentation;
+using Kongroo.CloudGames.Library;
+using Kongroo.CloudGames.Library.Infrastructure;
 using Kongroo.SharedKernel.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -59,7 +61,8 @@ builder
     .AddResourceUtilizationHealthCheck()
     .AddNpgSql(builder.Configuration.GetRequiredConnectionString("Database"))
     .AddDbContextCheck<CatalogDbContext>()
-    .AddDbContextCheck<IdentityDbContext>();
+    .AddDbContextCheck<IdentityDbContext>()
+    .AddDbContextCheck<LibraryDbContext>();
 
 builder
     .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -89,6 +92,7 @@ builder
 
 builder.Services.AddCatalogModule(builder.Configuration);
 builder.Services.AddIdentityModule(builder.Configuration);
+builder.Services.AddLibraryModule(builder.Configuration);
 
 var app = builder.Build();
 

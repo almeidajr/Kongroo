@@ -1,5 +1,6 @@
 using Kongroo.CloudGames.Catalog.Infrastructure;
 using Kongroo.CloudGames.Identity.Infrastructure;
+using Kongroo.CloudGames.Library.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Api;
@@ -14,6 +15,7 @@ public static class HostExtensions
 
             await ApplyMigrationsAsync<CatalogDbContext>(scope.ServiceProvider, cancellationToken);
             await ApplyMigrationsAsync<IdentityDbContext>(scope.ServiceProvider, cancellationToken);
+            await ApplyMigrationsAsync<LibraryDbContext>(scope.ServiceProvider, cancellationToken);
         }
     }
 
