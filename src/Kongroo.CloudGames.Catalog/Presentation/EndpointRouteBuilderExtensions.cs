@@ -87,6 +87,25 @@ public static class EndpointRouteBuilderExtensions
                 .WithDescription("Deletes an existing game from the catalog.");
 
             ordersGroup
+                .MapGet("/", GetOrdersAsync)
+                .RequireAuthorization()
+                .ProducesProblem(StatusCodes.Status401Unauthorized)
+                .ProducesProblem(StatusCodes.Status500InternalServerError)
+                .WithName("GetOrders")
+                .WithSummary("Get orders")
+                .WithDescription("Returns the authenticated user's orders ordered by most recent purchase.");
+
+            ordersGroup
+                .MapGet("/{orderId:guid}", GetOrderAsync)
+                .RequireAuthorization()
+                .ProducesProblem(StatusCodes.Status401Unauthorized)
+                .ProducesProblem(StatusCodes.Status404NotFound)
+                .ProducesProblem(StatusCodes.Status500InternalServerError)
+                .WithName("GetOrderById")
+                .WithSummary("Get an order")
+                .WithDescription("Returns a single order owned by the authenticated user.");
+
+            ordersGroup
                 .MapPost("/", PlaceOrderAsync)
                 .RequireAuthorization()
                 .ProducesValidationProblem()
@@ -180,6 +199,31 @@ public static class EndpointRouteBuilderExtensions
         await handler.HandleAsync(command, cancellationToken);
 
         return TypedResults.NoContent();
+    }
+
+    private static async Task<Ok<IReadOnlyList<GetOrderResponse>>> GetOrdersAsync(
+        ClaimsPrincipal user,
+        GetOrdersQueryHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        var query = new GetOrdersQuery(user.GetUserId());
+        var response = await handler.HandleAsync(query, cancellationToken);
+
+        return TypedResults.Ok(response);
+    }
+
+    private static async Task<Ok<GetOrderResponse>> GetOrderAsync(
+        [Description("Unique identifier of the order to retrieve.")] Guid orderId,
+        ClaimsPrincipal user,
+        GetOrderQueryHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        var query = new GetOrderQuery(user.GetUserId(), orderId);
+        var response = await handler.HandleAsync(query, cancellationToken);
+
+        return TypedResults.Ok(response);
     }
 
     private static async Task<Ok<GetOrderResponse>> PlaceOrderAsync(

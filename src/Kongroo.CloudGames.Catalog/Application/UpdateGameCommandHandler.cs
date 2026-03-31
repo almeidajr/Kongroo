@@ -5,13 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Catalog.Application;
 
-public class UpdateGameCommandHandler(CatalogDbContext context)
+public class UpdateGameCommandHandler(CatalogDbContext context, TimeProvider timeProvider)
 {
     public async Task<GetGameResponse> HandleAsync(UpdateGameCommand command, CancellationToken cancellationToken)
     {
         var game =
             await context
-                .Games.Where(game => game.Id == GameId.From(command.GameId))
+                .Games.Include(candidate => candidate.Promotions)
+                .Where(game => game.Id == GameId.From(command.GameId))
                 .SingleOrDefaultAsync(cancellationToken)
             ?? throw new NotFoundException(nameof(Game), $"identifier '{command.GameId}'");
 
@@ -21,13 +22,24 @@ public class UpdateGameCommandHandler(CatalogDbContext context)
 
         await context.SaveChangesAsync(cancellationToken);
 
+        var activePromotion = game.GetActivePromotion(timeProvider.GetUtcNow());
+
         return new GetGameResponse(
             game.Id.Value,
             game.Title.Value,
             game.Description.Value,
             game.Price.Amount,
             game.Price.Currency,
-            game.Status
+            game.Status,
+            activePromotion is null
+                ? null
+                : new GetPromotionResponse(
+                    activePromotion.Id.Value,
+                    game.Id.Value,
+                    activePromotion.Discount.Value,
+                    activePromotion.ActiveRange.Start,
+                    activePromotion.ActiveRange.End
+                )
         );
     }
 }

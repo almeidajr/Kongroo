@@ -54,15 +54,17 @@ public class PlaceOrderCommandHandler(CatalogDbContext context, TimeProvider tim
             order.Total.Amount,
             order.Total.Currency,
             [
-                .. order.Lines.Select(line => new GetOrderLineResponse(
-                    line.GameId.Value,
-                    line.GameTitle.Value,
-                    line.ListPrice.Amount,
-                    line.ListPrice.Currency,
-                    line.FinalPrice.Amount,
-                    line.FinalPrice.Currency,
-                    line.AppliedPromotionId?.Value
-                )),
+                .. order
+                    .Lines.OrderBy(line => line.GameTitle.Value)
+                    .Select(line => new GetOrderLineResponse(
+                        line.GameId.Value,
+                        line.GameTitle.Value,
+                        line.ListPrice.Amount,
+                        line.ListPrice.Currency,
+                        line.FinalPrice.Amount,
+                        line.FinalPrice.Currency,
+                        line.AppliedPromotionId?.Value
+                    )),
             ]
         );
     }

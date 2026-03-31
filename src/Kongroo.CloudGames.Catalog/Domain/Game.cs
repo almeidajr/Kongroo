@@ -99,6 +99,9 @@ public class Game : Entity<GameId>
         return promotion;
     }
 
+    public Promotion? GetActivePromotion(DateTimeOffset asOf) =>
+        _promotions.SingleOrDefault(candidate => candidate.ActiveRange.Contains(asOf));
+
     public GamePurchaseQuote QuotePurchase(DateTimeOffset asOf)
     {
         if (Status != GameStatus.Published)
@@ -106,7 +109,7 @@ public class Game : Entity<GameId>
             throw new ConflictException(nameof(Game), "game must be published to be purchased");
         }
 
-        var promotion = _promotions.SingleOrDefault(candidate => candidate.ActiveRange.Contains(asOf));
+        var promotion = GetActivePromotion(asOf);
         var finalPrice = Price.ApplyDiscount(promotion?.Discount ?? Percentage.MinValue);
 
         return new GamePurchaseQuote(Id, Title, Price, finalPrice, promotion?.Id);

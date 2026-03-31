@@ -25,6 +25,8 @@ public static class ServiceCollectionExtensions
             services.AddScoped<CreatePromotionCommandHandler>();
             services.AddScoped<CreateGameCommandHandler>();
             services.AddScoped<GetGameQueryHandler>();
+            services.AddScoped<GetOrderQueryHandler>();
+            services.AddScoped<GetOrdersQueryHandler>();
             services.AddScoped<GetGamesQueryHandler>();
             services.AddScoped<PlaceOrderCommandHandler>();
             services.AddScoped<UpdateGameCommandHandler>();

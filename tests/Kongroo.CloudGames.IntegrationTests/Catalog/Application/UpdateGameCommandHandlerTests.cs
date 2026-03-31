@@ -4,6 +4,7 @@ using Kongroo.CloudGames.Catalog.Infrastructure;
 using Kongroo.CloudGames.IntegrationTests.Fixtures;
 using Kongroo.SharedKernel.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Time.Testing;
 using Shouldly;
 
 namespace Kongroo.CloudGames.IntegrationTests.Catalog.Application;
@@ -21,7 +22,7 @@ public sealed class UpdateGameCommandHandlerTests(PostgreSqlFixture postgreSqlFi
         await using var context = _database.CreateDbContext();
         var gameId = await CreateGameAsync(context, TestContext.Current.CancellationToken);
 
-        var handler = new UpdateGameCommandHandler(context);
+        var handler = new UpdateGameCommandHandler(context, new FakeTimeProvider());
 
         // Act
         var response = await handler.HandleAsync(
@@ -54,7 +55,7 @@ public sealed class UpdateGameCommandHandlerTests(PostgreSqlFixture postgreSqlFi
         await using var context = _database.CreateDbContext();
         var gameId = await CreateGameAsync(context, TestContext.Current.CancellationToken);
 
-        var handler = new UpdateGameCommandHandler(context);
+        var handler = new UpdateGameCommandHandler(context, new FakeTimeProvider());
 
         // Act
         await handler.HandleAsync(
@@ -91,7 +92,7 @@ public sealed class UpdateGameCommandHandlerTests(PostgreSqlFixture postgreSqlFi
         // Arrange
         await using var context = _database.CreateDbContext();
         var missingGameId = Guid.NewGuid();
-        var handler = new UpdateGameCommandHandler(context);
+        var handler = new UpdateGameCommandHandler(context, new FakeTimeProvider());
 
         // Act
         var exception = await Should.ThrowAsync<NotFoundException>(() =>

@@ -328,7 +328,7 @@ public sealed class PlaceOrderCommandHandlerTests(PostgreSqlFixture postgreSqlFi
     )
     {
         var gameId = await CreateGameAsync(context, title, priceAmount, cancellationToken);
-        var handler = new UpdateGameCommandHandler(context);
+        var handler = new UpdateGameCommandHandler(context, new FakeTimeProvider(PurchasedAt));
         await handler.HandleAsync(
             new UpdateGameCommand(
                 gameId.Value,

@@ -3,13 +3,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Catalog.Application;
 
-public class GetGamesQueryHandler(CatalogDbContext context)
+public class GetGamesQueryHandler(CatalogDbContext context, TimeProvider timeProvider)
 {
     public async Task<IReadOnlyList<GetGameResponse>> HandleAsync(
         GetGamesQuery query,
         CancellationToken cancellationToken
-    ) =>
-        await context
+    )
+    {
+        var now = timeProvider.GetUtcNow();
+
+        return await context
             .Games.AsNoTracking()
             .OrderBy(game => game.Title)
             .Select(game => new GetGameResponse(
@@ -18,7 +21,19 @@ public class GetGamesQueryHandler(CatalogDbContext context)
                 game.Description.Value,
                 game.Price.Amount,
                 game.Price.Currency,
-                game.Status
+                game.Status,
+                game.Promotions.Where(promotion =>
+                        promotion.ActiveRange.Start <= now && now < promotion.ActiveRange.End
+                    )
+                    .Select(promotion => new GetPromotionResponse(
+                        promotion.Id.Value,
+                        game.Id.Value,
+                        promotion.Discount.Value,
+                        promotion.ActiveRange.Start,
+                        promotion.ActiveRange.End
+                    ))
+                    .SingleOrDefault()
             ))
             .ToListAsync(cancellationToken);
+    }
 }
