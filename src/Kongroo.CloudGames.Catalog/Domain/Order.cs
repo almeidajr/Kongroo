@@ -46,10 +46,7 @@ public class Order : Entity<OrderId>
             Total = Money.From(quotes.Sum(quote => quote.FinalPrice.Amount), currency),
         };
 
-        foreach (var quote in quotes)
-        {
-            order._lines.Add(OrderLine.FromQuote(quote));
-        }
+        order._lines.AddRange(quotes.Select(OrderLine.FromQuote));
 
         order.RaiseDomainEvent(new OrderPlacedDomainEvent(order.Id, order.BuyerId, order.Total));
 

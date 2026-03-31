@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Security.Claims;
 using Kongroo.CloudGames.Catalog.Application;
 using Kongroo.SharedKernel.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -15,7 +16,9 @@ public static class EndpointRouteBuilderExtensions
         public RouteGroupBuilder MapCatalogEndpoints()
         {
             var routeGroup = endpoints.MapGroup("/catalog").WithTags("Catalog");
+
             var gamesGroup = routeGroup.MapGroup("/games");
+            var ordersGroup = routeGroup.MapGroup("/orders");
 
             gamesGroup
                 .MapPost("/", CreateGameAsync)
@@ -60,6 +63,19 @@ public static class EndpointRouteBuilderExtensions
                 .WithDescription("Replaces the editable details of an existing game.");
 
             gamesGroup
+                .MapPost("/{gameId:guid}/promotions", CreatePromotionAsync)
+                .RequireAuthorization(AuthorizationPolicies.AdminOnly)
+                .ProducesValidationProblem()
+                .ProducesProblem(StatusCodes.Status401Unauthorized)
+                .ProducesProblem(StatusCodes.Status403Forbidden)
+                .ProducesProblem(StatusCodes.Status404NotFound)
+                .ProducesProblem(StatusCodes.Status409Conflict)
+                .ProducesProblem(StatusCodes.Status500InternalServerError)
+                .WithName("CreatePromotion")
+                .WithSummary("Create a promotion")
+                .WithDescription("Creates a scheduled promotion for an existing game.");
+
+            gamesGroup
                 .MapDelete("/{gameId:guid}", DeleteGameAsync)
                 .RequireAuthorization(AuthorizationPolicies.AdminOnly)
                 .ProducesProblem(StatusCodes.Status401Unauthorized)
@@ -69,6 +85,18 @@ public static class EndpointRouteBuilderExtensions
                 .WithName("DeleteGame")
                 .WithSummary("Delete a game")
                 .WithDescription("Deletes an existing game from the catalog.");
+
+            ordersGroup
+                .MapPost("/", PlaceOrderAsync)
+                .RequireAuthorization()
+                .ProducesValidationProblem()
+                .ProducesProblem(StatusCodes.Status401Unauthorized)
+                .ProducesProblem(StatusCodes.Status404NotFound)
+                .ProducesProblem(StatusCodes.Status409Conflict)
+                .ProducesProblem(StatusCodes.Status500InternalServerError)
+                .WithName("PlaceOrder")
+                .WithSummary("Place an order")
+                .WithDescription("Purchases one or more games for the authenticated user.");
 
             return routeGroup;
         }
@@ -129,6 +157,19 @@ public static class EndpointRouteBuilderExtensions
         return TypedResults.Ok(response);
     }
 
+    private static async Task<Ok<GetPromotionResponse>> CreatePromotionAsync(
+        [Description("Unique identifier of the game to promote.")] Guid gameId,
+        CreatePromotionRequest request,
+        CreatePromotionCommandHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        var command = new CreatePromotionCommand(gameId, request.Discount, request.StartsAt, request.EndsAt);
+        var response = await handler.HandleAsync(command, cancellationToken);
+
+        return TypedResults.Ok(response);
+    }
+
     private static async Task<NoContent> DeleteGameAsync(
         [Description("Unique identifier of the game to delete.")] Guid gameId,
         DeleteGameCommandHandler handler,
@@ -139,5 +180,18 @@ public static class EndpointRouteBuilderExtensions
         await handler.HandleAsync(command, cancellationToken);
 
         return TypedResults.NoContent();
+    }
+
+    private static async Task<Ok<GetOrderResponse>> PlaceOrderAsync(
+        PlaceOrderRequest request,
+        ClaimsPrincipal user,
+        PlaceOrderCommandHandler handler,
+        CancellationToken cancellationToken
+    )
+    {
+        var command = new PlaceOrderCommand(user.GetUserId(), request.GameIds);
+        var response = await handler.HandleAsync(command, cancellationToken);
+
+        return TypedResults.Ok(response);
     }
 }

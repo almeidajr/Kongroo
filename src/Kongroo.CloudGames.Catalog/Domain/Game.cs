@@ -107,7 +107,7 @@ public class Game : Entity<GameId>
         }
 
         var promotion = _promotions.SingleOrDefault(candidate => candidate.ActiveRange.Contains(asOf));
-        var finalPrice = promotion is null ? Price : Price.ApplyDiscount(promotion.Discount);
+        var finalPrice = Price.ApplyDiscount(promotion?.Discount ?? Percentage.MinValue);
 
         return new GamePurchaseQuote(Id, Title, Price, finalPrice, promotion?.Id);
     }

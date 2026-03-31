@@ -3,6 +3,7 @@ using Kongroo.CloudGames.Catalog.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Kongroo.CloudGames.Catalog;
 
@@ -21,9 +22,11 @@ public static class ServiceCollectionExtensions
 
         private IServiceCollection AddApplication()
         {
+            services.AddScoped<CreatePromotionCommandHandler>();
             services.AddScoped<CreateGameCommandHandler>();
             services.AddScoped<GetGameQueryHandler>();
             services.AddScoped<GetGamesQueryHandler>();
+            services.AddScoped<PlaceOrderCommandHandler>();
             services.AddScoped<UpdateGameCommandHandler>();
             services.AddScoped<DeleteGameCommandHandler>();
 
@@ -32,6 +35,8 @@ public static class ServiceCollectionExtensions
 
         private IServiceCollection AddInfrastructure(IConfiguration configuration)
         {
+            services.TryAddSingleton(TimeProvider.System);
+
             services.AddDbContext<CatalogDbContext>(contextOptions =>
                 contextOptions
                     .EnableDetailedErrors()
