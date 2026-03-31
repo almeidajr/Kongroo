@@ -9,9 +9,9 @@ public class GameOwnershipTests
     public void AcquireFromOrder_ShouldCreateGameOwnership()
     {
         // Arrange
-        var ownerId = OwnerId.From(Guid.Parse("11111111-1111-1111-1111-111111111111"));
-        var gameId = GameId.From(Guid.Parse("22222222-2222-2222-2222-222222222222"));
-        var orderId = OrderId.From(Guid.Parse("33333333-3333-3333-3333-333333333333"));
+        var ownerId = OwnerId.From(Guid.NewGuid());
+        var gameId = GameId.From(Guid.NewGuid());
+        var orderId = OrderId.From(Guid.NewGuid());
         var acquiredAt = new DateTimeOffset(2026, 3, 31, 12, 0, 0, TimeSpan.Zero);
 
         // Act
@@ -25,9 +25,9 @@ public class GameOwnershipTests
     public void AcquireFromOrder_ShouldStoreOwnerIdGameIdOrderIdAndAcquiredAt()
     {
         // Arrange
-        var ownerId = OwnerId.From(Guid.Parse("11111111-1111-1111-1111-111111111111"));
-        var gameId = GameId.From(Guid.Parse("22222222-2222-2222-2222-222222222222"));
-        var orderId = OrderId.From(Guid.Parse("33333333-3333-3333-3333-333333333333"));
+        var ownerId = OwnerId.From(Guid.NewGuid());
+        var gameId = GameId.From(Guid.NewGuid());
+        var orderId = OrderId.From(Guid.NewGuid());
         var acquiredAt = new DateTimeOffset(2026, 3, 31, 12, 0, 0, TimeSpan.Zero);
 
         // Act
@@ -46,9 +46,9 @@ public class GameOwnershipTests
     public void AcquireFromOrder_ShouldRaiseGameAcquiredDomainEvent()
     {
         // Arrange
-        var ownerId = OwnerId.From(Guid.Parse("11111111-1111-1111-1111-111111111111"));
-        var gameId = GameId.From(Guid.Parse("22222222-2222-2222-2222-222222222222"));
-        var orderId = OrderId.From(Guid.Parse("33333333-3333-3333-3333-333333333333"));
+        var ownerId = OwnerId.From(Guid.NewGuid());
+        var gameId = GameId.From(Guid.NewGuid());
+        var orderId = OrderId.From(Guid.NewGuid());
         var acquiredAt = new DateTimeOffset(2026, 3, 31, 12, 0, 0, TimeSpan.Zero);
 
         // Act

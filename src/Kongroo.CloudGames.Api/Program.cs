@@ -15,6 +15,7 @@ using Kongroo.CloudGames.Identity.Infrastructure;
 using Kongroo.CloudGames.Identity.Presentation;
 using Kongroo.CloudGames.Library;
 using Kongroo.CloudGames.Library.Infrastructure;
+using Kongroo.CloudGames.Library.Presentation;
 using Kongroo.SharedKernel.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -106,6 +107,7 @@ app.UseAuthorization();
 app.MapHealthChecks("health", new HealthCheckOptions { ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse });
 app.MapCatalogEndpoints();
 app.MapIdentityEndpoints();
+app.MapLibraryEndpoints();
 
 if (app.Environment.IsDevelopment())
 {
