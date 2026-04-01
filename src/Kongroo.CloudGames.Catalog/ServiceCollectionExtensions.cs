@@ -1,5 +1,7 @@
 using Kongroo.CloudGames.Catalog.Application;
+using Kongroo.CloudGames.Catalog.Domain;
 using Kongroo.CloudGames.Catalog.Infrastructure;
+using Kongroo.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +33,8 @@ public static class ServiceCollectionExtensions
             services.AddScoped<PlaceOrderCommandHandler>();
             services.AddScoped<UpdateGameCommandHandler>();
             services.AddScoped<DeleteGameCommandHandler>();
+
+            services.AddScoped<IDomainEventHandler<OrderPlacedDomainEvent>, OrderPlacedDomainEventHandler>();
 
             return services;
         }

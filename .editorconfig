@@ -395,6 +395,12 @@ dotnet_diagnostic.CS1591.severity = none
 # CA1711: Identifiers should not have incorrect suffix
 dotnet_diagnostic.CA1711.severity = none
 
+# CA1848: Use the LoggerMessage delegates
+dotnet_diagnostic.CA1848.severity = none
+
+# CA1873: Avoid potentially expensive logging
+dotnet_diagnostic.CA1873.severity = suggestion
+
 [**/Migrations/*.cs]
 
 generated_code = true
