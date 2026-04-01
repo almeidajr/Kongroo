@@ -2,8 +2,10 @@
 
 namespace Kongroo.SharedKernel;
 
-public class OutboxMessage : Entity<OutboxMessageId>
+public sealed class OutboxMessage : Entity<OutboxMessageId>
 {
+    private OutboxMessage() { }
+
     public required DateTimeOffset OccurredAt { get; init; }
 
     public required Type Type { get; init; }
