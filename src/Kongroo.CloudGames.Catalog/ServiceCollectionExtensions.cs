@@ -39,15 +39,20 @@ public static class ServiceCollectionExtensions
         {
             services.TryAddSingleton(TimeProvider.System);
 
-            services.AddDbContext<CatalogDbContext>(contextOptions =>
-                contextOptions
-                    .EnableDetailedErrors()
-                    .EnableSensitiveDataLogging()
-                    .UseNpgsql(
-                        configuration.GetConnectionString("Database"),
-                        postgresOptions => postgresOptions.MigrationsHistoryTable("migrations", CatalogDbContext.Schema)
-                    )
-                    .UseSnakeCaseNamingConvention()
+            services.AddSingleton<OutboxMessagesInterceptor>();
+
+            services.AddDbContext<CatalogDbContext>(
+                (serviceProvider, contextOptions) =>
+                    contextOptions
+                        .EnableDetailedErrors()
+                        .EnableSensitiveDataLogging()
+                        .AddInterceptors(serviceProvider.GetRequiredService<OutboxMessagesInterceptor>())
+                        .UseNpgsql(
+                            configuration.GetConnectionString("Database"),
+                            postgresOptions =>
+                                postgresOptions.MigrationsHistoryTable("migrations", CatalogDbContext.Schema)
+                        )
+                        .UseSnakeCaseNamingConvention()
             );
 
             return services;

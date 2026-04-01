@@ -2,7 +2,7 @@
 
 namespace Kongroo.SharedKernel;
 
-public abstract class Entity<TEntityId>
+public abstract class Entity<TEntityId> : IHasDomainEvents
     where TEntityId : IEquatable<TEntityId>
 {
     private readonly List<DomainEvent> _domainEvents = [];

@@ -11,6 +11,7 @@ public sealed class CatalogTestDatabase(PostgreSqlFixture fixture)
             new DbContextOptionsBuilder<CatalogDbContext>()
                 .EnableDetailedErrors()
                 .EnableSensitiveDataLogging()
+                .AddInterceptors(new OutboxMessagesInterceptor())
                 .UseNpgsql(
                     fixture.ConnectionString,
                     postgresOptions => postgresOptions.MigrationsHistoryTable("migrations", CatalogDbContext.Schema)
@@ -26,6 +27,7 @@ public sealed class CatalogTestDatabase(PostgreSqlFixture fixture)
         await context.Database.ExecuteSqlRawAsync(
             $"""
             TRUNCATE TABLE
+                "{CatalogDbContext.Schema}"."outbox_messages",
                 "{CatalogDbContext.Schema}"."order_lines",
                 "{CatalogDbContext.Schema}"."orders",
                 "{CatalogDbContext.Schema}"."promotions",

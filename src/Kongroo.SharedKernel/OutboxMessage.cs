@@ -18,13 +18,15 @@ public sealed class OutboxMessage : Entity<OutboxMessageId>
 
     public string? Error { get; private set; }
 
-    public static OutboxMessage Create<T>(T domainEvent)
-        where T : DomainEvent
+    public static OutboxMessage Create(DomainEvent domainEvent)
     {
+        ArgumentNullException.ThrowIfNull(domainEvent);
+
+        var domainEventType = domainEvent.GetType();
         var eventType =
-            typeof(T).AssemblyQualifiedName
-            ?? throw new InvalidOperationException($"Unable to persist the type '{typeof(T)}'.");
-        var payload = JsonSerializer.Serialize(domainEvent);
+            domainEventType.AssemblyQualifiedName
+            ?? throw new InvalidOperationException($"Unable to persist the type '{domainEventType}'.");
+        var payload = JsonSerializer.Serialize(domainEvent, domainEventType);
 
         return new OutboxMessage
         {
