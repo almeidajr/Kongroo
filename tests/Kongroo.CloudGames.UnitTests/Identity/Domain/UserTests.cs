@@ -3,7 +3,7 @@ using Shouldly;
 
 namespace Kongroo.CloudGames.UnitTests.Identity.Domain;
 
-public class UserTests
+public sealed class UserTests
 {
     [Fact]
     public void Create_WithValidValues_ShouldInitializeUserWithDefaultRole()

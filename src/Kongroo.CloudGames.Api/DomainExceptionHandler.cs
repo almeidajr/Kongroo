@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Kongroo.CloudGames.Api;
 
-public class DomainExceptionHandler(IProblemDetailsService problemDetailsService) : IExceptionHandler
+public sealed class DomainExceptionHandler(IProblemDetailsService problemDetailsService) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,

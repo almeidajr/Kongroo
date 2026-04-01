@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Catalog.Application;
 
-public class GetOrderQueryHandler(CatalogDbContext context)
+public sealed class GetOrderQueryHandler(CatalogDbContext context)
 {
     public async Task<GetOrderResponse> HandleAsync(GetOrderQuery query, CancellationToken cancellationToken)
     {

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Identity.Application;
 
-public class UpdateUserRoleCommandHandler(IdentityDbContext context)
+public sealed class UpdateUserRoleCommandHandler(IdentityDbContext context)
 {
     public async Task<GetUserResponse> HandleAsync(UpdateUserRoleCommand command, CancellationToken cancellationToken)
     {

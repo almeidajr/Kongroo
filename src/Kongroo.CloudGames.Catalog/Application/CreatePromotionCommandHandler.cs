@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Catalog.Application;
 
-public class CreatePromotionCommandHandler(CatalogDbContext context)
+public sealed class CreatePromotionCommandHandler(CatalogDbContext context)
 {
     public async Task<GetPromotionResponse> HandleAsync(
         CreatePromotionCommand command,

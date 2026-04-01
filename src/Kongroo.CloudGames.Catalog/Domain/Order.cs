@@ -3,7 +3,7 @@ using Kongroo.SharedKernel.Exceptions;
 
 namespace Kongroo.CloudGames.Catalog.Domain;
 
-public class Order : Entity<OrderId>
+public sealed class Order : Entity<OrderId>
 {
     private readonly List<OrderLine> _lines = [];
 

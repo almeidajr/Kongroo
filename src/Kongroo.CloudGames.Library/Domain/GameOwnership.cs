@@ -2,7 +2,7 @@ using Kongroo.SharedKernel;
 
 namespace Kongroo.CloudGames.Library.Domain;
 
-public class GameOwnership : Entity<GameOwnershipId>
+public sealed class GameOwnership : Entity<GameOwnershipId>
 {
     private GameOwnership() { }
 

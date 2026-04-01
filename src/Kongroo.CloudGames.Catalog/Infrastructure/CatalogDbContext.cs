@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Catalog.Infrastructure;
 
-public class CatalogDbContext(DbContextOptions<CatalogDbContext> options) : DbContext(options)
+public sealed class CatalogDbContext(DbContextOptions<CatalogDbContext> options) : DbContext(options)
 {
     public const string Schema = "catalog";
 

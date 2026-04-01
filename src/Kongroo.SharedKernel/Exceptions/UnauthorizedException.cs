@@ -1,6 +1,6 @@
 namespace Kongroo.SharedKernel.Exceptions;
 
-public class UnauthorizedException : DomainException
+public sealed class UnauthorizedException : DomainException
 {
     public UnauthorizedException(string resourceName, string reason)
         : base($"{resourceName} resource unauthorized: {reason}.")

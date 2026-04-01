@@ -5,7 +5,7 @@ using System.Numerics;
 namespace Kongroo.SharedKernel.Attributes;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
-public class NonNegativeAttribute<T>()
+public sealed class NonNegativeAttribute<T>()
     : RangeAttribute(
         typeof(T),
         T.Zero.ToString(null, CultureInfo.InvariantCulture),

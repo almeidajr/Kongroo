@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Identity.Application;
 
-public class GetUserQueryHandler(IdentityDbContext context)
+public sealed class GetUserQueryHandler(IdentityDbContext context)
 {
     public async Task<GetUserResponse> HandleAsync(GetUserQuery query, CancellationToken cancellationToken) =>
         await context

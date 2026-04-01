@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Identity.Application;
 
-public class GetUsersQueryHandler(IdentityDbContext context)
+public sealed class GetUsersQueryHandler(IdentityDbContext context)
 {
     public async Task<IReadOnlyList<GetUserResponse>> HandleAsync(
         GetUsersQuery query,

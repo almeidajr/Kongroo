@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Identity.Application;
 
-public class CreateUserCommandHandler(IPasswordHasher<string> passwordHasher, IdentityDbContext context)
+public sealed class CreateUserCommandHandler(IPasswordHasher<string> passwordHasher, IdentityDbContext context)
 {
     public async Task<CreateUserResponse> HandleAsync(CreateUserCommand command, CancellationToken cancellationToken)
     {

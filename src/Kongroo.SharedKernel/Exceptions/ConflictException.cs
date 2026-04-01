@@ -1,6 +1,6 @@
 ﻿namespace Kongroo.SharedKernel.Exceptions;
 
-public class ConflictException : DomainException
+public sealed class ConflictException : DomainException
 {
     public ConflictException(string resourceName, string reason)
         : base($"{resourceName} resource conflict: {reason}.")

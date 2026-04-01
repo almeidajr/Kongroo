@@ -2,7 +2,7 @@ using Kongroo.SharedKernel;
 
 namespace Kongroo.CloudGames.Identity.Domain;
 
-public class User : Entity<UserId>
+public sealed class User : Entity<UserId>
 {
     private User() { }
 

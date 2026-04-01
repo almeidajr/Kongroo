@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Catalog.Application;
 
-public class GetOrdersQueryHandler(CatalogDbContext context)
+public sealed class GetOrdersQueryHandler(CatalogDbContext context)
 {
     public async Task<IReadOnlyList<GetOrderResponse>> HandleAsync(
         GetOrdersQuery query,

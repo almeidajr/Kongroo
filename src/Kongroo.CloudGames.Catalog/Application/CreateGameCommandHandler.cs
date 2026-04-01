@@ -3,7 +3,7 @@ using Kongroo.CloudGames.Catalog.Infrastructure;
 
 namespace Kongroo.CloudGames.Catalog.Application;
 
-public class CreateGameCommandHandler(CatalogDbContext context)
+public sealed class CreateGameCommandHandler(CatalogDbContext context)
 {
     public async Task<CreateGameResponse> HandleAsync(CreateGameCommand command, CancellationToken cancellationToken)
     {

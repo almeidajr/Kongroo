@@ -3,7 +3,7 @@ using Shouldly;
 
 namespace Kongroo.CloudGames.UnitTests.Catalog.Domain;
 
-public class DateTimeRangeTests
+public sealed class DateTimeRangeTests
 {
     [Fact]
     public void From_WithStartBeforeEnd_ShouldCreateRange()

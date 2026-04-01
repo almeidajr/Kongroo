@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Catalog.Application;
 
-public class DeleteGameCommandHandler(CatalogDbContext context)
+public sealed class DeleteGameCommandHandler(CatalogDbContext context)
 {
     public async Task HandleAsync(DeleteGameCommand command, CancellationToken cancellationToken)
     {

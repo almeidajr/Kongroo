@@ -3,7 +3,7 @@ using Shouldly;
 
 namespace Kongroo.CloudGames.UnitTests.Library.Domain;
 
-public class GameOwnershipTests
+public sealed class GameOwnershipTests
 {
     [Fact]
     public void AcquireFromOrder_ShouldCreateGameOwnership()

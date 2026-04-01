@@ -5,7 +5,7 @@ using Microsoft.OpenApi;
 
 namespace Kongroo.CloudGames.Api.OpenApi;
 
-public class BearerSecuritySchemeTransformer(IAuthenticationSchemeProvider authenticationSchemeProvider)
+public sealed class BearerSecuritySchemeTransformer(IAuthenticationSchemeProvider authenticationSchemeProvider)
     : IOpenApiDocumentTransformer
 {
     public async Task TransformAsync(

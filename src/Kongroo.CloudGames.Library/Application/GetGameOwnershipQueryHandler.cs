@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Library.Application;
 
-public class GetGameOwnershipQueryHandler(LibraryDbContext context)
+public sealed class GetGameOwnershipQueryHandler(LibraryDbContext context)
 {
     public async Task<GetGameOwnershipResponse> HandleAsync(
         GetGameOwnershipQuery query,

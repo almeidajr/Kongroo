@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Identity.Infrastructure;
 
-public class IdentityDbContext(DbContextOptions<IdentityDbContext> options) : DbContext(options)
+public sealed class IdentityDbContext(DbContextOptions<IdentityDbContext> options) : DbContext(options)
 {
     public const string Schema = "identity";
 

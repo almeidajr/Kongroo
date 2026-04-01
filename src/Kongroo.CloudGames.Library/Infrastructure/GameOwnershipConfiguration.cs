@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Kongroo.CloudGames.Library.Infrastructure;
 
-public class GameOwnershipConfiguration : IEntityTypeConfiguration<GameOwnership>
+public sealed class GameOwnershipConfiguration : IEntityTypeConfiguration<GameOwnership>
 {
     public void Configure(EntityTypeBuilder<GameOwnership> builder)
     {

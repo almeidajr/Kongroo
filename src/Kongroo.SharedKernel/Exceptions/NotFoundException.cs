@@ -1,6 +1,6 @@
 namespace Kongroo.SharedKernel.Exceptions;
 
-public class NotFoundException : DomainException
+public sealed class NotFoundException : DomainException
 {
     public NotFoundException(string resourceName, string lookup)
         : base($"{resourceName} resource with {lookup} was not found.")

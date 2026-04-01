@@ -5,7 +5,7 @@ using Shouldly;
 
 namespace Kongroo.CloudGames.UnitTests.Catalog.Domain;
 
-public class CurrencyTests
+public sealed class CurrencyTests
 {
     [Fact]
     public void Definition_WithCurrencyEnumMembers_ShouldHaveMatchingCodeConstantNames()

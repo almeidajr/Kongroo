@@ -4,7 +4,7 @@ using Shouldly;
 
 namespace Kongroo.CloudGames.UnitTests.Catalog.Domain;
 
-public class GameTests
+public sealed class GameTests
 {
     [Fact]
     public void Create_WithValidValues_ShouldInitializeGameWithDraftStatus()

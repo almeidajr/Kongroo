@@ -3,7 +3,7 @@ using Shouldly;
 
 namespace Kongroo.CloudGames.UnitTests.Catalog.Domain;
 
-public class MoneyTests
+public sealed class MoneyTests
 {
     [Fact]
     public void ApplyDiscount_WithValidPercentage_ShouldReturnDiscountedMoney()

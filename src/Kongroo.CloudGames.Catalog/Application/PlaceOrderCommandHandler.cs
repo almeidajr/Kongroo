@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Catalog.Application;
 
-public class PlaceOrderCommandHandler(CatalogDbContext context, TimeProvider timeProvider)
+public sealed class PlaceOrderCommandHandler(CatalogDbContext context, TimeProvider timeProvider)
 {
     public async Task<GetOrderResponse> HandleAsync(PlaceOrderCommand command, CancellationToken cancellationToken)
     {

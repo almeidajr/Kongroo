@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Catalog.Application;
 
-public class GetGameQueryHandler(CatalogDbContext context, TimeProvider timeProvider)
+public sealed class GetGameQueryHandler(CatalogDbContext context, TimeProvider timeProvider)
 {
     public async Task<GetGameResponse> HandleAsync(GetGameQuery query, CancellationToken cancellationToken)
     {

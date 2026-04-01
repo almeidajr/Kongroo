@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Library.Infrastructure;
 
-public class LibraryDbContext(DbContextOptions<LibraryDbContext> options) : DbContext(options)
+public sealed class LibraryDbContext(DbContextOptions<LibraryDbContext> options) : DbContext(options)
 {
     public const string Schema = "library";
 

@@ -4,7 +4,7 @@ using Shouldly;
 
 namespace Kongroo.CloudGames.UnitTests.Catalog.Domain;
 
-public class OrderTests
+public sealed class OrderTests
 {
     [Fact]
     public void PlaceCompleted_WithSingleQuote_ShouldCreateCompletedOrder()
