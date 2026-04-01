@@ -392,6 +392,9 @@ dotnet_naming_style.camelcase.capitalization = camel_case
 # CS1591: Missing XML comment for publicly visible type or member
 dotnet_diagnostic.CS1591.severity = none
 
+# CA1711: Identifiers should not have incorrect suffix
+dotnet_diagnostic.CA1711.severity = none
+
 [**/Migrations/*.cs]
 
 generated_code = true
