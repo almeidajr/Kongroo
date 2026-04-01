@@ -17,19 +17,14 @@ public class OutboxMessage : Entity<OutboxMessageId>
     public string? Error { get; private set; }
 
     public static OutboxMessage Create<T>(T domainEvent)
-        where T : DomainEvent
-    {
-        ArgumentNullException.ThrowIfNull(domainEvent);
-        var payload = JsonSerializer.Serialize(domainEvent);
-
-        return new OutboxMessage
+        where T : DomainEvent =>
+        new()
         {
             Id = OutboxMessageId.Create(),
             OccurredAt = domainEvent.OccurredAt,
             Type = typeof(T),
-            Payload = payload,
+            Payload = JsonSerializer.Serialize(domainEvent),
         };
-    }
 
     public DomainEvent GetDomainEvent()
     {
