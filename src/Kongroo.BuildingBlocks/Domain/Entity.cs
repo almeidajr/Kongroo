@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Kongroo.SharedKernel;
+namespace Kongroo.BuildingBlocks.Domain;
 
 public abstract class Entity<TEntityId> : IHasDomainEvents
     where TEntityId : IEquatable<TEntityId>

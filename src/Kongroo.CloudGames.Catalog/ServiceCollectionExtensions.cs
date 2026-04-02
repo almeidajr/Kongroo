@@ -1,6 +1,6 @@
+using Kongroo.BuildingBlocks.Application;
 using Kongroo.CloudGames.Catalog.Application;
 using Kongroo.CloudGames.Catalog.Infrastructure;
-using Kongroo.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

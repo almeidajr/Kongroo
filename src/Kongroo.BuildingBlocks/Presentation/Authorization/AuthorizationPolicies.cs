@@ -1,4 +1,4 @@
-namespace Kongroo.SharedKernel.Authorization;
+namespace Kongroo.BuildingBlocks.Presentation;
 
 public static class AuthorizationPolicies
 {

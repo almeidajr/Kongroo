@@ -1,4 +1,4 @@
-﻿namespace Kongroo.SharedKernel;
+namespace Kongroo.BuildingBlocks.Infrastructure;
 
 public record OutboxMessageId(Guid Value)
 {

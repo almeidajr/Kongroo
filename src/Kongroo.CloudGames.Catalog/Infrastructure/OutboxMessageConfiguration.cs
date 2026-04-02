@@ -1,4 +1,4 @@
-﻿using Kongroo.SharedKernel;
+using Kongroo.BuildingBlocks.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

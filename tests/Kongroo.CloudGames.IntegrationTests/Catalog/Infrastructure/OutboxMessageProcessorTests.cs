@@ -1,6 +1,8 @@
+using Kongroo.BuildingBlocks.Application;
+using Kongroo.BuildingBlocks.Domain;
+using Kongroo.BuildingBlocks.Infrastructure;
 using Kongroo.CloudGames.Catalog.Infrastructure;
 using Kongroo.CloudGames.IntegrationTests.Fixtures;
-using Kongroo.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;

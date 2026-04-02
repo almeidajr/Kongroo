@@ -1,4 +1,4 @@
-namespace Kongroo.SharedKernel;
+namespace Kongroo.BuildingBlocks.Domain;
 
 public interface IHasDomainEvents
 {

@@ -1,5 +1,5 @@
+using Kongroo.BuildingBlocks.Domain;
 using Kongroo.CloudGames.Catalog.Domain;
-using Kongroo.SharedKernel.Exceptions;
 using Shouldly;
 
 namespace Kongroo.CloudGames.UnitTests.Catalog.Domain;

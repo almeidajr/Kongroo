@@ -1,6 +1,7 @@
-﻿using System.Text.Json;
+using System.Text.Json;
+using Kongroo.BuildingBlocks.Domain;
 
-namespace Kongroo.SharedKernel;
+namespace Kongroo.BuildingBlocks.Infrastructure;
 
 public sealed class OutboxMessage : Entity<OutboxMessageId>
 {

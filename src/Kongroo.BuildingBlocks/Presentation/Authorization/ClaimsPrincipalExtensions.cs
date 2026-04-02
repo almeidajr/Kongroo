@@ -1,7 +1,7 @@
 using System.Security.Claims;
-using Kongroo.SharedKernel.Exceptions;
+using Kongroo.BuildingBlocks.Domain;
 
-namespace Kongroo.SharedKernel.Authorization;
+namespace Kongroo.BuildingBlocks.Presentation;
 
 public static class ClaimsPrincipalExtensions
 {

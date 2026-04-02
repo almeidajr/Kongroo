@@ -1,5 +1,5 @@
+using Kongroo.BuildingBlocks.Application;
 using Kongroo.CloudGames.Catalog.Domain;
-using Kongroo.SharedKernel;
 using Microsoft.Extensions.Logging;
 
 namespace Kongroo.CloudGames.Catalog.Application;

@@ -1,6 +1,6 @@
+using Kongroo.BuildingBlocks.Domain;
 using Kongroo.CloudGames.Identity.Domain;
 using Kongroo.CloudGames.Identity.Infrastructure;
-using Kongroo.SharedKernel.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Identity.Application;

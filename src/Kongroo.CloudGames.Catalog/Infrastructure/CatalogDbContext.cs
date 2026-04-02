@@ -1,5 +1,5 @@
+using Kongroo.BuildingBlocks.Infrastructure;
 using Kongroo.CloudGames.Catalog.Domain;
-using Kongroo.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Catalog.Infrastructure;

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
@@ -10,6 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kongroo.SharedKernel\Kongroo.SharedKernel.csproj" />
+    <ProjectReference Include="..\Kongroo.BuildingBlocks\Kongroo.BuildingBlocks.csproj" />
   </ItemGroup>
 </Project>

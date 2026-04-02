@@ -1,4 +1,5 @@
-using Kongroo.SharedKernel;
+using Kongroo.BuildingBlocks.Domain;
+using Kongroo.BuildingBlocks.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 

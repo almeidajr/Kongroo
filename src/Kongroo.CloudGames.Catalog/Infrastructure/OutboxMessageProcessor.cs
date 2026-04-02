@@ -1,4 +1,6 @@
-using Kongroo.SharedKernel;
+using Kongroo.BuildingBlocks.Application;
+using Kongroo.BuildingBlocks.Domain;
+using Kongroo.BuildingBlocks.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

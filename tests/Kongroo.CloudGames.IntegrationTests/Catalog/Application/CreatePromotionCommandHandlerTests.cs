@@ -1,8 +1,8 @@
+using Kongroo.BuildingBlocks.Domain;
 using Kongroo.CloudGames.Catalog.Application;
 using Kongroo.CloudGames.Catalog.Domain;
 using Kongroo.CloudGames.Catalog.Infrastructure;
 using Kongroo.CloudGames.IntegrationTests.Fixtures;
-using Kongroo.SharedKernel.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
 

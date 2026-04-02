@@ -1,6 +1,6 @@
+using Kongroo.BuildingBlocks.Domain;
 using Kongroo.CloudGames.Catalog.Domain;
 using Kongroo.CloudGames.Catalog.Infrastructure;
-using Kongroo.SharedKernel.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Catalog.Application;

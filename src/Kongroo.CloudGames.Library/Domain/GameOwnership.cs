@@ -1,4 +1,4 @@
-using Kongroo.SharedKernel;
+using Kongroo.BuildingBlocks.Domain;
 
 namespace Kongroo.CloudGames.Library.Domain;
 

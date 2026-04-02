@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Numerics;
 
-namespace Kongroo.SharedKernel.Attributes;
+namespace Kongroo.BuildingBlocks.Presentation;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
 public sealed class NonNegativeAttribute<T>()

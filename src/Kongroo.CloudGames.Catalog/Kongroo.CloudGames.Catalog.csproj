@@ -9,6 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kongroo.SharedKernel\Kongroo.SharedKernel.csproj" />
+    <ProjectReference Include="..\Kongroo.BuildingBlocks\Kongroo.BuildingBlocks.csproj" />
   </ItemGroup>
 </Project>

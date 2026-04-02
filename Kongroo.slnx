@@ -13,7 +13,7 @@
     <Project Path="src/Kongroo.CloudGames.Catalog/Kongroo.CloudGames.Catalog.csproj" />
     <Project Path="src/Kongroo.CloudGames.Identity/Kongroo.CloudGames.Identity.csproj" />
     <Project Path="src/Kongroo.CloudGames.Library/Kongroo.CloudGames.Library.csproj" />
-    <Project Path="src/Kongroo.SharedKernel/Kongroo.SharedKernel.csproj" />
+    <Project Path="src/Kongroo.BuildingBlocks/Kongroo.BuildingBlocks.csproj" />
   </Folder>
 
   <Folder Name="/tests/">

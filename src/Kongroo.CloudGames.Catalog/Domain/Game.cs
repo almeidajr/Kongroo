@@ -1,5 +1,4 @@
-using Kongroo.SharedKernel;
-using Kongroo.SharedKernel.Exceptions;
+using Kongroo.BuildingBlocks.Domain;
 
 namespace Kongroo.CloudGames.Catalog.Domain;
 
