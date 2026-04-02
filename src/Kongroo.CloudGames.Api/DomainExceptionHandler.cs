@@ -1,4 +1,4 @@
-using Kongroo.BuildingBlocks.Domain;
+using Kongroo.BuildingBlocks.Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 

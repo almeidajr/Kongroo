@@ -1,4 +1,4 @@
-using Kongroo.BuildingBlocks.Domain;
+using Kongroo.BuildingBlocks.Domain.Exceptions;
 using Kongroo.CloudGames.Catalog.Domain;
 using Kongroo.CloudGames.Catalog.Infrastructure;
 using Microsoft.EntityFrameworkCore;

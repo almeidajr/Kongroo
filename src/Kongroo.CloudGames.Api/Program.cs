@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using HealthChecks.UI.Client;
-using Kongroo.BuildingBlocks.Presentation;
+using Kongroo.BuildingBlocks.Presentation.Authorization;
 using Kongroo.CloudGames.Api;
 using Kongroo.CloudGames.Api.OpenApi;
 using Kongroo.CloudGames.Catalog;

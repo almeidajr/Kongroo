@@ -1,4 +1,4 @@
-using Kongroo.BuildingBlocks.Domain;
+using Kongroo.BuildingBlocks.Domain.Exceptions;
 using Kongroo.CloudGames.Identity.Application;
 using Kongroo.CloudGames.Identity.Domain;
 using Kongroo.CloudGames.Identity.Infrastructure;

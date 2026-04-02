@@ -1,6 +1,6 @@
 using System.ComponentModel;
 using System.Security.Claims;
-using Kongroo.BuildingBlocks.Presentation;
+using Kongroo.BuildingBlocks.Presentation.Authorization;
 using Kongroo.CloudGames.Catalog.Application;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

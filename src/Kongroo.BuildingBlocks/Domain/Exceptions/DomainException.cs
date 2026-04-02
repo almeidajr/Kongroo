@@ -1,4 +1,4 @@
-namespace Kongroo.BuildingBlocks.Domain;
+namespace Kongroo.BuildingBlocks.Domain.Exceptions;
 
 public abstract class DomainException : InvalidOperationException
 {

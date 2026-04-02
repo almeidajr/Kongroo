@@ -1,4 +1,5 @@
 using Kongroo.BuildingBlocks.Domain;
+using Kongroo.BuildingBlocks.Domain.Exceptions;
 
 namespace Kongroo.CloudGames.Catalog.Domain;
 

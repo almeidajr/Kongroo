@@ -1,4 +1,4 @@
-namespace Kongroo.BuildingBlocks.Presentation;
+namespace Kongroo.BuildingBlocks.Presentation.Authorization;
 
 public static class AuthorizationPolicies
 {

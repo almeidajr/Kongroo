@@ -1,7 +1,7 @@
 using System.Security.Claims;
-using Kongroo.BuildingBlocks.Domain;
+using Kongroo.BuildingBlocks.Domain.Exceptions;
 
-namespace Kongroo.BuildingBlocks.Presentation;
+namespace Kongroo.BuildingBlocks.Presentation.Authorization;
 
 public static class ClaimsPrincipalExtensions
 {
@@ -9,7 +9,7 @@ public static class ClaimsPrincipalExtensions
     {
         public Guid GetUserId()
         {
-            var subject = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var subject = user.FindFirstValue(ClaimTypes.NameIdentifier);
 
             return Guid.TryParse(subject, out var userId)
                 ? userId

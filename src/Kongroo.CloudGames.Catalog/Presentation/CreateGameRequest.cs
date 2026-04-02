@@ -1,6 +1,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Kongroo.BuildingBlocks.Presentation;
+using Kongroo.BuildingBlocks.Presentation.Attributes;
 using Kongroo.CloudGames.Catalog.Domain;
 
 namespace Kongroo.CloudGames.Catalog.Presentation;
