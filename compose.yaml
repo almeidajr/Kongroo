@@ -18,7 +18,7 @@ services:
       start_period: 10s
 
   pgadmin:
-    image: dpage/pgadmin4:9.13
+    image: dpage/pgadmin4:9.14
     restart: unless-stopped
     depends_on:
       postgres:
