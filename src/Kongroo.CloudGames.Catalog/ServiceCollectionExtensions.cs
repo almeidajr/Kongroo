@@ -1,5 +1,4 @@
 using Kongroo.CloudGames.Catalog.Application;
-using Kongroo.CloudGames.Catalog.Domain;
 using Kongroo.CloudGames.Catalog.Infrastructure;
 using Kongroo.SharedKernel;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +33,7 @@ public static class ServiceCollectionExtensions
             services.AddScoped<UpdateGameCommandHandler>();
             services.AddScoped<DeleteGameCommandHandler>();
 
-            services.AddScoped<IDomainEventHandler<OrderPlacedDomainEvent>, OrderPlacedDomainEventHandler>();
+            services.AddScoped<IDomainEventHandler, OrderPlacedDomainEventHandler>();
 
             return services;
         }
@@ -42,8 +41,15 @@ public static class ServiceCollectionExtensions
         private IServiceCollection AddInfrastructure(IConfiguration configuration)
         {
             services.TryAddSingleton(TimeProvider.System);
+            services
+                .AddOptions<OutboxProcessingOptions>()
+                .Bind(configuration.GetRequiredSection(OutboxProcessingOptions.SectionName))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
 
             services.AddSingleton<OutboxMessagesInterceptor>();
+            services.AddScoped<OutboxMessageProcessor>();
+            services.AddHostedService<OutboxMessageProcessorHostedService>();
 
             services.AddDbContext<CatalogDbContext>(
                 (serviceProvider, contextOptions) =>

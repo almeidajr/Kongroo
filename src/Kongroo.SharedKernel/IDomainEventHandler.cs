@@ -1,7 +1,8 @@
 namespace Kongroo.SharedKernel;
 
-public interface IDomainEventHandler<in TDomainEvent>
-    where TDomainEvent : DomainEvent
+public interface IDomainEventHandler
 {
-    Task HandleAsync(TDomainEvent domainEvent, CancellationToken cancellationToken);
+    Type EventType { get; }
+
+    Task HandleAsync(DomainEvent domainEvent, CancellationToken cancellationToken);
 }

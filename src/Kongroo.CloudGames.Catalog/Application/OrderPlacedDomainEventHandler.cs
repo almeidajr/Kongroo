@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 namespace Kongroo.CloudGames.Catalog.Application;
 
 public sealed class OrderPlacedDomainEventHandler(ILogger<OrderPlacedDomainEventHandler> logger)
-    : IDomainEventHandler<OrderPlacedDomainEvent>
+    : DomainEventHandler<OrderPlacedDomainEvent>
 {
-    public Task HandleAsync(OrderPlacedDomainEvent domainEvent, CancellationToken cancellationToken)
+    public override Task HandleAsync(OrderPlacedDomainEvent domainEvent, CancellationToken cancellationToken)
     {
         logger.LogInformation(
             "Order placed. OrderId: {OrderId}, BuyerId: {BuyerId}, TotalAmount: {TotalAmount}, Currency: {Currency}",
