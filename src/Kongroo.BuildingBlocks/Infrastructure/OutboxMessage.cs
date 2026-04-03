@@ -5,6 +5,9 @@ namespace Kongroo.BuildingBlocks.Infrastructure;
 
 public sealed class OutboxMessage : Entity<OutboxMessageId>
 {
+    public const int EventTypeMaxLength = 512;
+    public const int ErrorMaxLength = 2048;
+
     private OutboxMessage() { }
 
     public required DateTimeOffset OccurredAt { get; init; }
@@ -27,6 +30,14 @@ public sealed class OutboxMessage : Entity<OutboxMessageId>
         var eventType =
             domainEventType.AssemblyQualifiedName
             ?? throw new InvalidOperationException($"Unable to persist the type '{domainEventType}'.");
+
+        if (eventType.Length > EventTypeMaxLength)
+        {
+            throw new InvalidOperationException(
+                $"The outbox event type '{domainEventType}' exceeds the maximum length of {EventTypeMaxLength} characters."
+            );
+        }
+
         var payload = JsonSerializer.Serialize(domainEvent, domainEventType);
 
         return new OutboxMessage
@@ -67,6 +78,7 @@ public sealed class OutboxMessage : Entity<OutboxMessageId>
     public void MarkFailed(DateTimeOffset failedAt, string error)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(error);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(error.Length, ErrorMaxLength);
 
         FailedAt = failedAt;
         Error = error;
