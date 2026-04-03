@@ -2,4 +2,10 @@ using Kongroo.BuildingBlocks.Domain;
 
 namespace Kongroo.CloudGames.Catalog.Domain;
 
-public record OrderPlacedDomainEvent(OrderId OrderId, BuyerId BuyerId, Money Total) : DomainEvent;
+public sealed record OrderPlacedDomainEvent(
+    OrderId OrderId,
+    BuyerId BuyerId,
+    DateTimeOffset PurchasedAt,
+    Money Total,
+    IReadOnlyList<GameId> GameIds
+) : DomainEvent;

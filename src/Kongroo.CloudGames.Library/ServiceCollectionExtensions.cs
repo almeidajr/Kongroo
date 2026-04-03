@@ -1,4 +1,6 @@
 using Kongroo.BuildingBlocks;
+using Kongroo.BuildingBlocks.Application;
+using Kongroo.BuildingBlocks.Contracts;
 using Kongroo.CloudGames.Library.Application;
 using Kongroo.CloudGames.Library.Infrastructure;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +26,10 @@ public static class ServiceCollectionExtensions
             services.AddScoped<AcquireGameOwnershipCommandHandler>();
             services.AddScoped<GetGameOwnershipQueryHandler>();
             services.AddScoped<GetGameOwnershipsQueryHandler>();
+            services.AddScoped<
+                IIntegrationEventHandler<OrderCompletedIntegrationEvent>,
+                OrderCompletedIntegrationEventHandler
+            >();
 
             return services;
         }

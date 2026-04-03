@@ -42,8 +42,10 @@ public sealed class OrderTests
         domainEvent.ShouldSatisfyAllConditions(
             () => domainEvent.OrderId.ShouldBe(order.Id),
             () => domainEvent.BuyerId.ShouldBe(buyerId),
+            () => domainEvent.PurchasedAt.ShouldBe(purchasedAt),
             () => domainEvent.Total.ShouldBe(order.Total)
         );
+        domainEvent.GameIds.ShouldBe([quote.GameId]);
     }
 
     [Fact]

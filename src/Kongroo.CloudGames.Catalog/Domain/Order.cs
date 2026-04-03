@@ -48,7 +48,15 @@ public sealed class Order : Entity<OrderId>
 
         order._lines.AddRange(quotes.Select(OrderLine.FromQuote));
 
-        order.RaiseDomainEvent(new OrderPlacedDomainEvent(order.Id, order.BuyerId, order.Total));
+        order.RaiseDomainEvent(
+            new OrderPlacedDomainEvent(
+                order.Id,
+                order.BuyerId,
+                order.PurchasedAt,
+                order.Total,
+                [.. order._lines.Select(line => line.GameId)]
+            )
+        );
 
         return order;
     }
