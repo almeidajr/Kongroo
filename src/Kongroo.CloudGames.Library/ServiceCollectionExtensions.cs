@@ -1,6 +1,6 @@
+using Kongroo.BuildingBlocks;
 using Kongroo.CloudGames.Library.Application;
 using Kongroo.CloudGames.Library.Infrastructure;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,16 +30,7 @@ public static class ServiceCollectionExtensions
 
         private IServiceCollection AddInfrastructure(IConfiguration configuration)
         {
-            services.AddDbContext<LibraryDbContext>(contextOptions =>
-                contextOptions
-                    .EnableDetailedErrors()
-                    .EnableSensitiveDataLogging()
-                    .UseNpgsql(
-                        configuration.GetConnectionString("Database"),
-                        postgresOptions => postgresOptions.MigrationsHistoryTable("migrations", LibraryDbContext.Schema)
-                    )
-                    .UseSnakeCaseNamingConvention()
-            );
+            services.AddOutboxContext<LibraryDbContext>(configuration);
 
             return services;
         }

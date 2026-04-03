@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Kongroo.CloudGames.Catalog.Infrastructure;
+namespace Kongroo.BuildingBlocks.Infrastructure;
 
 public sealed class OutboxProcessingOptions
 {

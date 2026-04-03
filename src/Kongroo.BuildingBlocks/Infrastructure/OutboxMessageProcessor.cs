@@ -1,19 +1,19 @@
 using Kongroo.BuildingBlocks.Application;
 using Kongroo.BuildingBlocks.Domain;
-using Kongroo.BuildingBlocks.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Kongroo.CloudGames.Catalog.Infrastructure;
+namespace Kongroo.BuildingBlocks.Infrastructure;
 
-public sealed class OutboxMessageProcessor(
-    ILogger<OutboxMessageProcessor> logger,
-    CatalogDbContext context,
+public sealed class OutboxMessageProcessor<TDbContext>(
+    ILogger<OutboxMessageProcessor<TDbContext>> logger,
+    TDbContext context,
     IEnumerable<IDomainEventHandler> handlers,
     TimeProvider timeProvider,
     IOptions<OutboxProcessingOptions> options
 )
+    where TDbContext : OutboxDbContext<TDbContext>, IRelationalDbContext
 {
     private readonly OutboxProcessingOptions _options = options.Value;
 
@@ -31,7 +31,8 @@ public sealed class OutboxMessageProcessor(
 
     private async Task<IReadOnlyList<OutboxMessage>> LoadPendingMessagesAsync(CancellationToken cancellationToken) =>
         await context
-            .OutboxMessages.Where(message => message.ProcessedAt == null)
+            .Set<OutboxMessage>()
+            .Where(message => message.ProcessedAt == null)
             .OrderBy(message => message.FailedAt != null)
             .ThenBy(message => message.FailedAt)
             .ThenBy(message => message.OccurredAt)

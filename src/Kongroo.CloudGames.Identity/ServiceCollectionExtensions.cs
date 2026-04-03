@@ -1,11 +1,10 @@
-﻿using Kongroo.CloudGames.Identity.Application;
+using Kongroo.BuildingBlocks;
+using Kongroo.CloudGames.Identity.Application;
 using Kongroo.CloudGames.Identity.Application.Abstractions;
 using Kongroo.CloudGames.Identity.Infrastructure;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Kongroo.CloudGames.Identity;
 
@@ -35,7 +34,7 @@ public static class ServiceCollectionExtensions
 
         private IServiceCollection AddInfrastructure(IConfiguration configuration)
         {
-            services.TryAddSingleton(TimeProvider.System);
+            services.AddOutboxContext<IdentityDbContext>(configuration);
 
             services
                 .AddOptions<JwtOptions>()
@@ -44,18 +43,6 @@ public static class ServiceCollectionExtensions
                 .ValidateOnStart();
             services.AddSingleton<IAccessTokenIssuer, JwtAccessTokenIssuer>();
             services.AddSingleton<IPasswordHasher<string>, PasswordHasher<string>>();
-
-            services.AddDbContext<IdentityDbContext>(contextOptions =>
-                contextOptions
-                    .EnableDetailedErrors()
-                    .EnableSensitiveDataLogging()
-                    .UseNpgsql(
-                        configuration.GetConnectionString("Database"),
-                        postgresOptions =>
-                            postgresOptions.MigrationsHistoryTable("migrations", IdentityDbContext.Schema)
-                    )
-                    .UseSnakeCaseNamingConvention()
-            );
 
             return services;
         }

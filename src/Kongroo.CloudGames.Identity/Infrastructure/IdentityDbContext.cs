@@ -1,17 +1,20 @@
-﻿using Kongroo.CloudGames.Identity.Domain;
+using Kongroo.BuildingBlocks.Infrastructure;
+using Kongroo.CloudGames.Identity.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Identity.Infrastructure;
 
-public sealed class IdentityDbContext(DbContextOptions<IdentityDbContext> options) : DbContext(options)
+public sealed class IdentityDbContext(DbContextOptions<IdentityDbContext> options)
+    : OutboxDbContext<IdentityDbContext>(options),
+        IRelationalDbContext
 {
-    public const string Schema = "identity";
+    public static string Schema => "identity";
 
     public DbSet<User> Users => Set<User>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultSchema(Schema);
+        base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfiguration(new UserConfiguration());
     }
 }

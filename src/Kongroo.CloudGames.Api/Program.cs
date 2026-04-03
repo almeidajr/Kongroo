@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using HealthChecks.UI.Client;
+using Kongroo.BuildingBlocks;
 using Kongroo.BuildingBlocks.Presentation.Authorization;
 using Kongroo.CloudGames.Api;
 using Kongroo.CloudGames.Api.OpenApi;
@@ -91,6 +92,7 @@ builder
     .Services.AddAuthorizationBuilder()
     .AddPolicy(AuthorizationPolicies.AdminOnly, policy => policy.RequireRole(nameof(UserRole.Admin)));
 
+builder.Services.AddBuildingBlocks(builder.Configuration);
 builder.Services.AddCatalogModule(builder.Configuration);
 builder.Services.AddIdentityModule(builder.Configuration);
 builder.Services.AddLibraryModule(builder.Configuration);

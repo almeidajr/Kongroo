@@ -1,8 +1,7 @@
-using Kongroo.BuildingBlocks.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Kongroo.CloudGames.Catalog.Infrastructure;
+namespace Kongroo.BuildingBlocks.Infrastructure;
 
 public sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<OutboxMessage>
 {

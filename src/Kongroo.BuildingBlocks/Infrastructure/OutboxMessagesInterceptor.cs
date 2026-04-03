@@ -1,9 +1,8 @@
 using Kongroo.BuildingBlocks.Domain;
-using Kongroo.BuildingBlocks.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace Kongroo.CloudGames.Catalog.Infrastructure;
+namespace Kongroo.BuildingBlocks.Infrastructure;
 
 public sealed class OutboxMessagesInterceptor : SaveChangesInterceptor
 {
@@ -20,7 +19,7 @@ public sealed class OutboxMessagesInterceptor : SaveChangesInterceptor
 
     private static void PersistOutboxMessages(DbContext? context)
     {
-        if (context is null)
+        if (context is not OutboxDbContext outboxContext)
         {
             return;
         }
@@ -36,9 +35,9 @@ public sealed class OutboxMessagesInterceptor : SaveChangesInterceptor
             return;
         }
 
-        context
-            .Set<OutboxMessage>()
-            .AddRange(entities.SelectMany(entity => entity.DomainEvents).Select(OutboxMessage.Create));
+        outboxContext.OutboxMessages.AddRange(
+            entities.SelectMany(entity => entity.DomainEvents).Select(OutboxMessage.Create)
+        );
 
         foreach (var entity in entities)
         {

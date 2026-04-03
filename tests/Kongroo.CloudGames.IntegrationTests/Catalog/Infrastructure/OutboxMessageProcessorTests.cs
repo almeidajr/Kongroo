@@ -88,7 +88,6 @@ public sealed class OutboxMessageProcessorTests(PostgreSqlFixture postgreSqlFixt
         await failingProcessor.ProcessPendingMessagesAsync(TestContext.Current.CancellationToken);
 
         // Assert
-
         var failedMessage = await context.OutboxMessages.SingleAsync(
             message => message.Id == outboxMessage.Id,
             TestContext.Current.CancellationToken
@@ -137,13 +136,13 @@ public sealed class OutboxMessageProcessorTests(PostgreSqlFixture postgreSqlFixt
         return outboxMessage;
     }
 
-    private static OutboxMessageProcessor CreateProcessor(
+    private static OutboxMessageProcessor<CatalogDbContext> CreateProcessor(
         CatalogDbContext context,
         FakeTimeProvider timeProvider,
         params IDomainEventHandler[] handlers
     ) =>
         new(
-            NullLogger<OutboxMessageProcessor>.Instance,
+            NullLogger<OutboxMessageProcessor<CatalogDbContext>>.Instance,
             context,
             handlers,
             timeProvider,

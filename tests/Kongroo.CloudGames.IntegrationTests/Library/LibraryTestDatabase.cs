@@ -1,3 +1,4 @@
+using Kongroo.BuildingBlocks.Infrastructure;
 using Kongroo.CloudGames.IntegrationTests.Fixtures;
 using Kongroo.CloudGames.Library.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ public sealed class LibraryTestDatabase(PostgreSqlFixture fixture)
             new DbContextOptionsBuilder<LibraryDbContext>()
                 .EnableDetailedErrors()
                 .EnableSensitiveDataLogging()
+                .AddInterceptors(new OutboxMessagesInterceptor())
                 .UseNpgsql(
                     fixture.ConnectionString,
                     postgresOptions => postgresOptions.MigrationsHistoryTable("migrations", LibraryDbContext.Schema)
@@ -23,9 +25,12 @@ public sealed class LibraryTestDatabase(PostgreSqlFixture fixture)
     {
         await using var context = CreateDbContext();
         await context.Database.MigrateAsync(cancellationToken);
-        await context.Database.ExecuteSqlRawAsync(
-            $"""TRUNCATE TABLE "{LibraryDbContext.Schema}"."game_ownerships";""",
-            cancellationToken
-        );
+        var truncateTablesSql = $"""
+            TRUNCATE TABLE
+                "{LibraryDbContext.Schema}"."outbox_messages",
+                "{LibraryDbContext.Schema}"."game_ownerships"
+            CASCADE;
+            """;
+        await context.Database.ExecuteSqlRawAsync(truncateTablesSql, cancellationToken);
     }
 }

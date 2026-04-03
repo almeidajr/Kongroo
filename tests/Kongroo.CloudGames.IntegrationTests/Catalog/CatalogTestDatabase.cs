@@ -1,3 +1,4 @@
+using Kongroo.BuildingBlocks.Infrastructure;
 using Kongroo.CloudGames.Catalog.Infrastructure;
 using Kongroo.CloudGames.IntegrationTests.Fixtures;
 using Microsoft.EntityFrameworkCore;
@@ -24,8 +25,7 @@ public sealed class CatalogTestDatabase(PostgreSqlFixture fixture)
     {
         await using var context = CreateDbContext();
         await context.Database.MigrateAsync(cancellationToken);
-        await context.Database.ExecuteSqlRawAsync(
-            $"""
+        var truncateTablesSql = $"""
             TRUNCATE TABLE
                 "{CatalogDbContext.Schema}"."outbox_messages",
                 "{CatalogDbContext.Schema}"."order_lines",
@@ -33,8 +33,7 @@ public sealed class CatalogTestDatabase(PostgreSqlFixture fixture)
                 "{CatalogDbContext.Schema}"."promotions",
                 "{CatalogDbContext.Schema}"."games"
             CASCADE;
-            """,
-            cancellationToken
-        );
+            """;
+        await context.Database.ExecuteSqlRawAsync(truncateTablesSql, cancellationToken);
     }
 }

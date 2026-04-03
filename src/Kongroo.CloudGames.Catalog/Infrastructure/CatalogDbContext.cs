@@ -4,21 +4,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kongroo.CloudGames.Catalog.Infrastructure;
 
-public sealed class CatalogDbContext(DbContextOptions<CatalogDbContext> options) : DbContext(options)
+public sealed class CatalogDbContext(DbContextOptions<CatalogDbContext> options)
+    : OutboxDbContext<CatalogDbContext>(options),
+        IRelationalDbContext
 {
-    public const string Schema = "catalog";
+    public static string Schema => "catalog";
 
     public DbSet<Game> Games => Set<Game>();
 
     public DbSet<Order> Orders => Set<Order>();
 
-    public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultSchema(Schema);
+        base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfiguration(new GameConfiguration());
         modelBuilder.ApplyConfiguration(new OrderConfiguration());
-        modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
     }
 }
