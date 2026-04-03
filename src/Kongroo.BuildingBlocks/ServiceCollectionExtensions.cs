@@ -1,3 +1,4 @@
+using Kongroo.BuildingBlocks.Application;
 using Kongroo.BuildingBlocks.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,7 @@ public static class ServiceCollectionExtensions
         {
             services.AddSingleton(TimeProvider.System);
             services.AddSingleton<OutboxMessagesInterceptor>();
+            services.AddScoped<IEventBus, InProcessEventBus>();
 
             services
                 .AddOptions<OutboxProcessingOptions>()
