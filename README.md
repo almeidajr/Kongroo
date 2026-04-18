@@ -28,7 +28,7 @@ Kongroo is the Phase 1 MVP for FIAP Cloud Games (FCG). The goal of this reposito
 | Unit tests for business rules | Implemented | Unit test project under `tests/Kongroo.CloudGames.UnitTests` |
 | TDD or BDD in at least one module | Automated tests are present | Unit and integration tests cover domain and application behavior |
 | DDD organization and business rules | Implemented | Domain entities, value objects, domain events, and module boundaries |
-| Event Storming documentation | Pending link | Miro board: TODO - add URL |
+| Event Storming documentation | Linked | Miro board: [Event Storming workspace](https://miro.com/app/board/uXjVGvYUERE=/?share_link_id=411419276450) |
 | Optional MongoDB, Dapper, GraphQL, Domain Storytelling | Not in current tracked scope | Not required for Phase 1 delivery |
 
 ## Project structure
@@ -117,6 +117,5 @@ dotnet test Kongroo.slnx
 
 ## Next steps / Phase gaps
 
-- Add the final Miro Event Storming URL.
 - Add the delivery video link when it is available.
 - Add the bootstrap of the first admin user.
