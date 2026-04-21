@@ -37,10 +37,16 @@ public static class ServiceCollectionExtensions
             services.AddOutboxContext<IdentityDbContext>(configuration);
 
             services
+                .AddOptions<BootstrapAdminOptions>()
+                .Bind(configuration.GetRequiredSection(BootstrapAdminOptions.SectionName))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
+            services
                 .AddOptions<JwtOptions>()
                 .Bind(configuration.GetRequiredSection(JwtOptions.SectionName))
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
+            services.AddScoped<BootstrapAdminService>();
             services.AddSingleton<IAccessTokenIssuer, JwtAccessTokenIssuer>();
             services.AddSingleton<IPasswordHasher<string>, PasswordHasher<string>>();
 

@@ -92,7 +92,13 @@ public sealed class CreateUserCommandHandlerTests(PostgreSqlFixture postgreSqlFi
         await using var context = _database.CreateDbContext();
         var handler = CreateHandler(context);
         await handler.HandleAsync(CreateUniqueUserCommand(), TestContext.Current.CancellationToken);
-        var command = new CreateUserCommand("kongroo", "other@example.com", "Sup3rSecure!", "Another User");
+        var command = new CreateUserCommand(
+            "kongroo",
+            "other@example.com",
+            "Sup3rSecure!",
+            "Another User",
+            UserRole.User
+        );
 
         // Act
         var exception = await Should.ThrowAsync<ConflictException>(() =>
@@ -111,7 +117,13 @@ public sealed class CreateUserCommandHandlerTests(PostgreSqlFixture postgreSqlFi
         await using var context = _database.CreateDbContext();
         var handler = CreateHandler(context);
         await handler.HandleAsync(CreateUniqueUserCommand(), TestContext.Current.CancellationToken);
-        var command = new CreateUserCommand("otheruser", "kongroo@example.com", "Sup3rSecure!", "Another User");
+        var command = new CreateUserCommand(
+            "otheruser",
+            "kongroo@example.com",
+            "Sup3rSecure!",
+            "Another User",
+            UserRole.User
+        );
 
         // Act
         var exception = await Should.ThrowAsync<ConflictException>(() =>
@@ -135,7 +147,7 @@ public sealed class CreateUserCommandHandlerTests(PostgreSqlFixture postgreSqlFi
         await using var context = _database.CreateDbContext();
         var handler = CreateHandler(context);
         await handler.HandleAsync(CreateUniqueUserCommand(), TestContext.Current.CancellationToken);
-        var command = new CreateUserCommand(username, email, "Sup3rSecure!", "Another User");
+        var command = new CreateUserCommand(username, email, "Sup3rSecure!", "Another User", UserRole.User);
 
         // Act
         await Should.ThrowAsync<ConflictException>(() =>
@@ -151,8 +163,37 @@ public sealed class CreateUserCommandHandlerTests(PostgreSqlFixture postgreSqlFi
 
     public ValueTask DisposeAsync() => ValueTask.CompletedTask;
 
+    [Fact]
+    public async Task HandleAsync_WithAdminRole_ShouldPersistAdminUser()
+    {
+        // Arrange
+        await using var context = _database.CreateDbContext();
+        var handler = CreateHandler(context);
+
+        // Act
+        var response = await handler.HandleAsync(
+            new CreateUserCommand(
+                "kongroo-admin",
+                "kongroo-admin@example.com",
+                "Sup3rSecure!",
+                "Kongroo Admin",
+                UserRole.Admin
+            ),
+            TestContext.Current.CancellationToken
+        );
+
+        context.ChangeTracker.Clear();
+        var savedUser = await context.Users.SingleAsync(
+            user => user.Id == UserId.From(response.Id),
+            TestContext.Current.CancellationToken
+        );
+
+        // Assert
+        savedUser.Role.ShouldBe(UserRole.Admin);
+    }
+
     private CreateUserCommandHandler CreateHandler(IdentityDbContext context) => new(_passwordHasher, context);
 
     private static CreateUserCommand CreateUniqueUserCommand(string password = "Sup3rSecure!") =>
-        new("kongroo", "kongroo@example.com", password, "Kongroo Cloud Games");
+        new("kongroo", "kongroo@example.com", password, "Kongroo Cloud Games", UserRole.User);
 }

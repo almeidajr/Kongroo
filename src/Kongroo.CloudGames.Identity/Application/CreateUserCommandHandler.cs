@@ -19,6 +19,11 @@ public sealed class CreateUserCommandHandler(IPasswordHasher<string> passwordHas
         var passwordHash = PasswordHash.From(passwordHasher.HashPassword(username.Value, command.Password));
         var user = User.Create(username, email, passwordHash, name);
 
+        if (command.Role == UserRole.Admin)
+        {
+            user.GrantAdmin();
+        }
+
         context.Users.Add(user);
         await context.SaveChangesAsync(cancellationToken);
 

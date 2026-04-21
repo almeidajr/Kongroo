@@ -85,23 +85,15 @@ When the API starts `ASPNETCORE_ENVIRONMENT` is set to `Development`. In this en
 - Obtain bearer tokens through `POST /identity/tokens`.
 - Every new account starts with the `User` role.
 - Admin-only endpoints exist for game management and user role changes.
-- There is no public bootstrap or seed flow for the first admin user in the tracked code.
 
-Because the first admin is not seeded automatically, it is need to promote one registered account manually in the database before testing admin-only endpoints.
+`BootstrapAdmin` is required configuration in every environment. In local development the repository already provides a default value in [appsettings.Development.json](src/Kongroo.CloudGames.Api/appsettings.Development.json).
 
-Example SQL:
+At startup the application checks the `identity.users` table:
 
-```sql
-SELECT username, email, role
-FROM identity.users
-ORDER BY username;
+- If there are no users yet, it creates the configured bootstrap account with the `Admin` role.
+- If any user already exists, bootstrap is skipped without changing existing accounts.
 
-UPDATE identity.users
-SET role = 'Admin'
-WHERE username = 'admin';
-```
-
-After promoting the account, create a fresh token with `POST /identity/tokens` so the JWT contains the `Admin` role claim.
+After the admin account is bootstrapped, create a token with `POST /identity/tokens` so the JWT contains the `Admin` role claim.
 
 ## Tests
 
@@ -118,4 +110,3 @@ dotnet test Kongroo.slnx
 ## Next steps / Phase gaps
 
 - Add the delivery video link when it is available.
-- Add the bootstrap of the first admin user.

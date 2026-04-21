@@ -24,7 +24,7 @@ public sealed class AuthenticateUserCommandHandlerTests(PostgreSqlFixture postgr
         const string password = "Sup3rSecure!Password";
         await using var context = _database.CreateDbContext();
         var userId = await CreateUserAsync(
-            new CreateUserCommand("kongroo", "kongroo@example.com", password, "Kongroo Cloud Games"),
+            new CreateUserCommand("kongroo", "kongroo@example.com", password, "Kongroo Cloud Games", UserRole.User),
             context,
             TestContext.Current.CancellationToken
         );
@@ -69,7 +69,13 @@ public sealed class AuthenticateUserCommandHandlerTests(PostgreSqlFixture postgr
         // Arrange
         await using var context = _database.CreateDbContext();
         await CreateUserAsync(
-            new CreateUserCommand("kongroo", "kongroo@example.com", "Sup3rSecure!Password", "Kongroo Cloud Games"),
+            new CreateUserCommand(
+                "kongroo",
+                "kongroo@example.com",
+                "Sup3rSecure!Password",
+                "Kongroo Cloud Games",
+                UserRole.User
+            ),
             context,
             TestContext.Current.CancellationToken
         );

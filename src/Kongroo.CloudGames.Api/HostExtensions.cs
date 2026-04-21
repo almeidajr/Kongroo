@@ -17,6 +17,14 @@ public static class HostExtensions
             await ApplyMigrationsAsync<IdentityDbContext>(scope.ServiceProvider, cancellationToken);
             await ApplyMigrationsAsync<LibraryDbContext>(scope.ServiceProvider, cancellationToken);
         }
+
+        public async Task BootstrapAdminAsync(CancellationToken cancellationToken = default)
+        {
+            await using var scope = host.Services.CreateAsyncScope();
+
+            var bootstrapAdminService = scope.ServiceProvider.GetRequiredService<BootstrapAdminService>();
+            await bootstrapAdminService.BootstrapAsync(cancellationToken);
+        }
     }
 
     private static async Task ApplyMigrationsAsync<TDbContext>(

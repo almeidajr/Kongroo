@@ -1,4 +1,5 @@
 using Kongroo.CloudGames.Identity.Application;
+using Kongroo.CloudGames.Identity.Domain;
 using Kongroo.CloudGames.Identity.Infrastructure;
 using Kongroo.CloudGames.IntegrationTests.Fixtures;
 using Microsoft.AspNetCore.Identity;
@@ -32,17 +33,17 @@ public sealed class GetUsersQueryHandlerTests(PostgreSqlFixture postgreSqlFixtur
         // Arrange
         await using var context = _database.CreateDbContext();
         await CreateUserAsync(
-            new CreateUserCommand("zebra", "zebra@example.com", "Sup3rSecure!", "Zebra User"),
+            new CreateUserCommand("zebra", "zebra@example.com", "Sup3rSecure!", "Zebra User", UserRole.User),
             context,
             TestContext.Current.CancellationToken
         );
         await CreateUserAsync(
-            new CreateUserCommand("admin", "admin@example.com", "Sup3rSecure!", "Admin User"),
+            new CreateUserCommand("admin", "admin@example.com", "Sup3rSecure!", "Admin User", UserRole.User),
             context,
             TestContext.Current.CancellationToken
         );
         await CreateUserAsync(
-            new CreateUserCommand("alpha", "alpha@example.com", "Sup3rSecure!", "Alpha User"),
+            new CreateUserCommand("alpha", "alpha@example.com", "Sup3rSecure!", "Alpha User", UserRole.User),
             context,
             TestContext.Current.CancellationToken
         );

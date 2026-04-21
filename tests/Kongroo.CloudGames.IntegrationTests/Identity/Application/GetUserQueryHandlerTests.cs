@@ -20,7 +20,13 @@ public sealed class GetUserQueryHandlerTests(PostgreSqlFixture postgreSqlFixture
         // Arrange
         await using var context = _database.CreateDbContext();
         var userId = await CreateUserAsync(
-            new CreateUserCommand("kongroo", "kongroo@example.com", "Sup3rSecure!Password", "Kongroo Cloud Games"),
+            new CreateUserCommand(
+                "kongroo",
+                "kongroo@example.com",
+                "Sup3rSecure!Password",
+                "Kongroo Cloud Games",
+                UserRole.User
+            ),
             context,
             TestContext.Current.CancellationToken
         );

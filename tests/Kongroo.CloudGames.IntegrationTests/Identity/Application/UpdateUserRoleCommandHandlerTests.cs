@@ -21,12 +21,24 @@ public sealed class UpdateUserRoleCommandHandlerTests(PostgreSqlFixture postgreS
         // Arrange
         await using var context = _database.CreateDbContext();
         var actingUserId = await CreateUserAsync(
-            new CreateUserCommand("acting-admin", "acting-admin@example.com", "Sup3rSecure!", "Acting Admin"),
+            new CreateUserCommand(
+                "acting-admin",
+                "acting-admin@example.com",
+                "Sup3rSecure!",
+                "Acting Admin",
+                UserRole.User
+            ),
             context,
             TestContext.Current.CancellationToken
         );
         var targetUserId = await CreateUserAsync(
-            new CreateUserCommand("target-user", "target-user@example.com", "Sup3rSecure!", "Target User"),
+            new CreateUserCommand(
+                "target-user",
+                "target-user@example.com",
+                "Sup3rSecure!",
+                "Target User",
+                UserRole.User
+            ),
             context,
             TestContext.Current.CancellationToken
         );
@@ -52,12 +64,24 @@ public sealed class UpdateUserRoleCommandHandlerTests(PostgreSqlFixture postgreS
         // Arrange
         await using var context = _database.CreateDbContext();
         var actingUserId = await CreateUserAsync(
-            new CreateUserCommand("acting-admin", "acting-admin@example.com", "Sup3rSecure!", "Acting Admin"),
+            new CreateUserCommand(
+                "acting-admin",
+                "acting-admin@example.com",
+                "Sup3rSecure!",
+                "Acting Admin",
+                UserRole.User
+            ),
             context,
             TestContext.Current.CancellationToken
         );
         var targetUserId = await CreateUserAsync(
-            new CreateUserCommand("target-admin", "target-admin@example.com", "Sup3rSecure!", "Target Admin"),
+            new CreateUserCommand(
+                "target-admin",
+                "target-admin@example.com",
+                "Sup3rSecure!",
+                "Target Admin",
+                UserRole.User
+            ),
             context,
             TestContext.Current.CancellationToken
         );
@@ -83,7 +107,13 @@ public sealed class UpdateUserRoleCommandHandlerTests(PostgreSqlFixture postgreS
         // Arrange
         await using var context = _database.CreateDbContext();
         var actingUserId = await CreateUserAsync(
-            new CreateUserCommand("acting-admin", "acting-admin@example.com", "Sup3rSecure!", "Acting Admin"),
+            new CreateUserCommand(
+                "acting-admin",
+                "acting-admin@example.com",
+                "Sup3rSecure!",
+                "Acting Admin",
+                UserRole.User
+            ),
             context,
             TestContext.Current.CancellationToken
         );
@@ -109,7 +139,7 @@ public sealed class UpdateUserRoleCommandHandlerTests(PostgreSqlFixture postgreS
         // Arrange
         await using var context = _database.CreateDbContext();
         var adminUserId = await CreateUserAsync(
-            new CreateUserCommand("self-admin", "self-admin@example.com", "Sup3rSecure!", "Self Admin"),
+            new CreateUserCommand("self-admin", "self-admin@example.com", "Sup3rSecure!", "Self Admin", UserRole.User),
             context,
             TestContext.Current.CancellationToken
         );
@@ -146,12 +176,24 @@ public sealed class UpdateUserRoleCommandHandlerTests(PostgreSqlFixture postgreS
         // Arrange
         await using var context = _database.CreateDbContext();
         var actingUserId = await CreateUserAsync(
-            new CreateUserCommand("acting-admin", "acting-admin@example.com", "Sup3rSecure!", "Acting Admin"),
+            new CreateUserCommand(
+                "acting-admin",
+                "acting-admin@example.com",
+                "Sup3rSecure!",
+                "Acting Admin",
+                UserRole.User
+            ),
             context,
             TestContext.Current.CancellationToken
         );
         var targetUserId = await CreateUserAsync(
-            new CreateUserCommand("target-user", "target-user@example.com", "Sup3rSecure!", "Target User"),
+            new CreateUserCommand(
+                "target-user",
+                "target-user@example.com",
+                "Sup3rSecure!",
+                "Target User",
+                UserRole.User
+            ),
             context,
             TestContext.Current.CancellationToken
         );

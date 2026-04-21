@@ -119,4 +119,5 @@ if (app.Environment.IsDevelopment())
     await app.ApplyMigrationsAsync();
 }
 
+await app.BootstrapAdminAsync();
 await app.RunAsync();

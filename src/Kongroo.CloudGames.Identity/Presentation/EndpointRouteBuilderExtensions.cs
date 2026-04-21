@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Security.Claims;
 using Kongroo.BuildingBlocks.Presentation.Authorization;
 using Kongroo.CloudGames.Identity.Application;
+using Kongroo.CloudGames.Identity.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -94,7 +95,13 @@ public static class EndpointRouteBuilderExtensions
         CancellationToken cancellationToken
     )
     {
-        var command = new CreateUserCommand(request.Username, request.Email, request.Password, request.Name);
+        var command = new CreateUserCommand(
+            request.Username,
+            request.Email,
+            request.Password,
+            request.Name,
+            UserRole.User
+        );
         var response = await handler.HandleAsync(command, cancellationToken);
 
         return TypedResults.CreatedAtRoute(response, "GetUserById", new { userId = response.Id });
