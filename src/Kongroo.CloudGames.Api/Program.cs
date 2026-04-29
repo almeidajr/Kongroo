@@ -115,9 +115,6 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
-
-    await app.ApplyMigrationsAsync();
 }
 
-await app.BootstrapAdminAsync();
 await app.RunAsync();

@@ -22,11 +22,24 @@ public static class ServiceCollectionExtensions
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 
+            services.AddHostedService<ApplicationInitializationService>();
+
             return services;
         }
 
-        public IServiceCollection AddOutboxContext<TDbContext>(IConfiguration configuration)
+        public IServiceCollection AddOutboxDbContext<TDbContext>(IConfiguration configuration)
             where TDbContext : OutboxDbContext<TDbContext>, IRelationalDbContext
+        {
+            services.AddRelationalDbContext<TDbContext>(configuration);
+
+            services.AddScoped<OutboxMessageProcessor<TDbContext>>();
+            services.AddHostedService<OutboxMessageProcessorHostedService<TDbContext>>();
+
+            return services;
+        }
+
+        public IServiceCollection AddRelationalDbContext<TDbContext>(IConfiguration configuration)
+            where TDbContext : DbContext, IRelationalDbContext
         {
             services.AddDbContext<TDbContext>(
                 (serviceProvider, contextOptions) =>
@@ -40,10 +53,12 @@ public static class ServiceCollectionExtensions
                         )
                         .UseSnakeCaseNamingConvention()
             );
-            services.AddScoped<OutboxMessageProcessor<TDbContext>>();
-            services.AddHostedService<OutboxMessageProcessorHostedService<TDbContext>>();
-
+            services.AddApplicationInitializer<DbInitializer<TDbContext>>();
             return services;
         }
+
+        public IServiceCollection AddApplicationInitializer<TApplicationInitializer>()
+            where TApplicationInitializer : class, IApplicationInitializer =>
+            services.AddScoped<IApplicationInitializer, TApplicationInitializer>();
     }
 }

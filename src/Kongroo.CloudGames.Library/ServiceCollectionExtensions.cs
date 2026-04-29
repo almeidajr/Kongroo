@@ -36,7 +36,7 @@ public static class ServiceCollectionExtensions
 
         private IServiceCollection AddInfrastructure(IConfiguration configuration)
         {
-            services.AddOutboxContext<LibraryDbContext>(configuration);
+            services.AddOutboxDbContext<LibraryDbContext>(configuration);
 
             return services;
         }

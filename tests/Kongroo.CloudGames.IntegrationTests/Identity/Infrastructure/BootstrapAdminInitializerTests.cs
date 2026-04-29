@@ -10,7 +10,7 @@ using Shouldly;
 
 namespace Kongroo.CloudGames.IntegrationTests.Identity.Infrastructure;
 
-public sealed class BootstrapAdminServiceTests(PostgreSqlFixture postgreSqlFixture)
+public sealed class BootstrapAdminInitializerTests(PostgreSqlFixture postgreSqlFixture)
     : IClassFixture<PostgreSqlFixture>,
         IAsyncLifetime
 {
@@ -19,11 +19,11 @@ public sealed class BootstrapAdminServiceTests(PostgreSqlFixture postgreSqlFixtu
     private readonly PasswordHasher<string> _passwordHasher = new();
 
     [Fact]
-    public async Task BootstrapAsync_WithConfiguredBootstrapAdminAndNoUsers_ShouldCreateAdminUser()
+    public async Task InitializeAsync_WithConfiguredBootstrapAdminAndNoUsers_ShouldCreateAdminUser()
     {
         // Arrange
         await using var context = _database.CreateDbContext();
-        var service = CreateService(
+        var initializer = CreateInitializer(
             context,
             new BootstrapAdminOptions
             {
@@ -35,9 +35,11 @@ public sealed class BootstrapAdminServiceTests(PostgreSqlFixture postgreSqlFixtu
         );
 
         // Act
-        await service.BootstrapAsync(TestContext.Current.CancellationToken);
+        var isEnabled = await initializer.IsEnabledAsync(TestContext.Current.CancellationToken);
+        await initializer.InitializeAsync(TestContext.Current.CancellationToken);
 
         // Assert
+        isEnabled.ShouldBeTrue();
         context.ChangeTracker.Clear();
         var savedUser = await context.Users.SingleAsync(TestContext.Current.CancellationToken);
 
@@ -55,7 +57,7 @@ public sealed class BootstrapAdminServiceTests(PostgreSqlFixture postgreSqlFixtu
     }
 
     [Fact]
-    public async Task BootstrapAsync_WhenAUserAlreadyExists_ShouldDoNothing()
+    public async Task IsEnabledAsync_WhenAUserAlreadyExists_ShouldReturnFalse()
     {
         // Arrange
         await using var context = _database.CreateDbContext();
@@ -71,7 +73,7 @@ public sealed class BootstrapAdminServiceTests(PostgreSqlFixture postgreSqlFixtu
             TestContext.Current.CancellationToken
         );
 
-        var service = CreateService(
+        var initializer = CreateInitializer(
             context,
             new BootstrapAdminOptions
             {
@@ -83,30 +85,30 @@ public sealed class BootstrapAdminServiceTests(PostgreSqlFixture postgreSqlFixtu
         );
 
         // Act
-        await service.BootstrapAsync(TestContext.Current.CancellationToken);
+        var isEnabled = await initializer.IsEnabledAsync(TestContext.Current.CancellationToken);
 
         // Assert
+        isEnabled.ShouldBeFalse();
         context.ChangeTracker.Clear();
         var users = await context
             .Users.OrderBy(user => user.Username)
             .ToListAsync(TestContext.Current.CancellationToken);
 
         users.Count.ShouldBe(1);
-        users
-            .Single()
-            .ShouldSatisfyAllConditions(
-                () => users.Single().Username.Value.ShouldBe("existing-user"),
-                () => users.Single().Role.ShouldBe(UserRole.User)
-            );
+        var user = users.Single();
+        user.ShouldSatisfyAllConditions(
+            () => user.Username.Value.ShouldBe("existing-user"),
+            () => user.Role.ShouldBe(UserRole.User)
+        );
     }
 
     public async ValueTask InitializeAsync() => await _database.ResetAsync(TestContext.Current.CancellationToken);
 
     public ValueTask DisposeAsync() => ValueTask.CompletedTask;
 
-    private BootstrapAdminService CreateService(IdentityDbContext context, BootstrapAdminOptions options) =>
+    private BootstrapAdminInitializer CreateInitializer(IdentityDbContext context, BootstrapAdminOptions options) =>
         new(
-            NullLogger<BootstrapAdminService>.Instance,
+            NullLogger<BootstrapAdminInitializer>.Instance,
             Options.Create(options),
             context,
             new CreateUserCommandHandler(_passwordHasher, context)

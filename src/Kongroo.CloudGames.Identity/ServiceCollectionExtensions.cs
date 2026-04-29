@@ -34,7 +34,7 @@ public static class ServiceCollectionExtensions
 
         private IServiceCollection AddInfrastructure(IConfiguration configuration)
         {
-            services.AddOutboxContext<IdentityDbContext>(configuration);
+            services.AddOutboxDbContext<IdentityDbContext>(configuration);
 
             services
                 .AddOptions<BootstrapAdminOptions>()
@@ -46,7 +46,7 @@ public static class ServiceCollectionExtensions
                 .Bind(configuration.GetRequiredSection(JwtOptions.SectionName))
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
-            services.AddScoped<BootstrapAdminService>();
+            services.AddApplicationInitializer<BootstrapAdminInitializer>();
             services.AddSingleton<IAccessTokenIssuer, JwtAccessTokenIssuer>();
             services.AddSingleton<IPasswordHasher<string>, PasswordHasher<string>>();
 
