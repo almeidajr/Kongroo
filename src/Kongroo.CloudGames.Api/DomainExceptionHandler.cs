@@ -4,7 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Kongroo.CloudGames.Api;
 
-public sealed class DomainExceptionHandler(IProblemDetailsService problemDetailsService) : IExceptionHandler
+public sealed class DomainExceptionHandler(
+    ILogger<DomainExceptionHandler> logger,
+    IProblemDetailsService problemDetailsService
+) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
@@ -14,6 +17,13 @@ public sealed class DomainExceptionHandler(IProblemDetailsService problemDetails
     {
         if (exception is not DomainException domainException)
         {
+            logger.LogError(
+                exception,
+                "An unexpected exception occurred while processing {RequestMethod} {RequestPath}.",
+                httpContext.Request.Method,
+                httpContext.Request.Path
+            );
+
             return false;
         }
 
