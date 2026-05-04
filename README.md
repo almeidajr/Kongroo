@@ -26,7 +26,7 @@ Kongroo is the Phase 1 MVP for FIAP Cloud Games (FCG). The goal of this reposito
 | Error handling and structured logs | Implemented | Exception handler, Problem Details, status code pages, and Serilog |
 | Swagger/OpenAPI documentation | Implemented | OpenAPI + Scalar exposed in Development |
 | Unit tests for business rules | Implemented | Unit test project under `tests/Kongroo.CloudGames.UnitTests` |
-| TDD or BDD in at least one module | Automated tests are present | Unit and integration tests cover domain and application behavior |
+| TDD or BDD in at least one module | Implemented | API-level BDD scenarios for the Identity module under `tests/Kongroo.CloudGames.Specs/Features/Identity` |
 | DDD organization and business rules | Implemented | Domain entities, value objects, domain events, and module boundaries |
 | Event Storming documentation | Linked | Miro board: [Event Storming workspace](https://miro.com/app/board/uXjVGvYUERE=/?share_link_id=411419276450) |
 | Optional MongoDB, Dapper, GraphQL, Domain Storytelling | Not in current tracked scope | Not required for Phase 1 delivery |
@@ -103,9 +103,16 @@ Run the full automated suite from the repository root:
 dotnet test Kongroo.slnx
 ```
 
+Run only the BDD API specifications:
+
+```bash
+dotnet test tests/Kongroo.CloudGames.Specs/Kongroo.CloudGames.Specs.csproj
+```
+
 - Unit tests live in `tests/Kongroo.CloudGames.UnitTests`.
 - Integration tests live in `tests/Kongroo.CloudGames.IntegrationTests`.
-- Integration tests use Testcontainers with PostgreSQL, so Docker must be available.
+- BDD API specifications live in `tests/Kongroo.CloudGames.Specs`.
+- Integration tests and BDD API specifications use Testcontainers with PostgreSQL, so Docker must be available.
 
 ## Next steps / Phase gaps
 
